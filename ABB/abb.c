@@ -122,6 +122,31 @@ bool abb_apilar_nodos(nodo_abb_t* nodo_arbol, pila_t* pila) {
 	return abb_apilar_nodos(nodo_arbol->izq, pila);
 }
 
+void* borrar_nodo(abb_t* arbol, nodo_abb_t** ptr_nodo, nodo_abb_t* nodo_arbol, nodo_abb_t* nodo_hijo) {
+	void* dato = nodo_arbol->dato;
+	
+	free((char*)nodo_arbol->clave);
+	free(nodo_arbol);
+	arbol->cantidad--;
+	*ptr_nodo = nodo_hijo;
+	return dato;
+}
+
+void* borrar_nodo_con_dos_hijos(abb_t* arbol, nodo_abb_t** ptr_nodo, nodo_abb_t* nodo_arbol) {
+	void* dato = nodo_arbol->dato;
+	nodo_abb_t* nodo_reemplazante = buscar_reemplazante(nodo_arbol->izq);
+	
+	char* clave_aux = strdup(nodo_reemplazante->clave);
+	if (!clave_aux) {
+		return NULL;
+	}
+	
+	nodo_arbol->dato = abb_borrar(arbol, nodo_reemplazante->clave);
+	free((char*)nodo_arbol->clave);
+	nodo_arbol->clave = clave_aux;
+	return dato;
+}
+
 /* ******************************************************************
  *                        PRIMITIVAS DEL ABB
  * *****************************************************************/
@@ -163,38 +188,26 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato) {
 }
 
 void *abb_borrar(abb_t *arbol, const char *clave) {
-	nodo_abb_t** ptr_nodo = abb_obtener_puntero_nodo(&arbol->raiz, arbol->cmp, clave);
+	nodo_abb_t** ptr_nodo = obtener_puntero_nodo(&arbol->raiz, arbol->cmp, clave);
 	nodo_abb_t* nodo_arbol_temp = *ptr_nodo;
 	
-	if (nodo_arbol_temp == NULL) {
+	if (!nodo_arbol_temp) {
 		return NULL;
 	}
 	
-	void* dato_temp = nodo_arbol_temp->dato;
-	if ((nodo_arbol_temp->der != NULL) && (nodo_arbol_temp->izq != NULL)) {
-		nodo_abb_t* nodo_reemplazo = abb_buscar_reemplazante(nodo_arbol_temp->izq);
-		char* clave_aux = strdup(nodo_reemplazo->clave);
-		if (clave_aux == NULL) {
-			return NULL;
-		}
-	    nodo_arbol_temp->dato = abb_borrar(arbol, nodo_reemplazo->clave);
-		free((char*)nodo_arbol_temp->clave);
-		nodo_arbol_temp->clave = clave_aux;
-		return dato_temp;
+	if (nodo_arbol_temp->der && nodo_arbol_temp->izq) {
+		return borrar_nodo_con_dos_hijos(arbol, ptr_nodo, nodo_arbol_temp);
 	}
 	
-	nodo_abb_t* nodo_hijo = NULL;
-	if ((nodo_arbol_temp->der != NULL) && (nodo_arbol_temp->izq == NULL)) {
-		nodo_hijo = nodo_arbol_temp->der;
-	} else if ((nodo_arbol_temp->der == NULL) && (nodo_arbol_temp->izq != NULL)) {
-		nodo_hijo = nodo_arbol_temp->izq;
+	if (nodo_arbol_temp->der && !nodo_arbol_temp->izq) {
+		return borrar_nodo(arbol, ptr_nodo, nodo_arbol_temp, nodo_arbol_temp->der);
 	}
 	
-	free((char*)nodo_arbol_temp->clave);
-	free(nodo_arbol_temp);
-	arbol->cantidad--;
-	*ptr_nodo = nodo_hijo;
-	return dato_temp;
+	if (!nodo_arbol_temp->der && nodo_arbol_temp->izq) {
+		return borrar_nodo(arbol, ptr_nodo, nodo_arbol_temp, nodo_arbol_temp->izq);
+	}
+	
+	return borrar_nodo(arbol, ptr_nodo, nodo_arbol_temp, NULL);
 }
 
 void *abb_obtener(const abb_t *arbol, const char *clave) {
