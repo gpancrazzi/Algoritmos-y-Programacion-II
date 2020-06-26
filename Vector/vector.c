@@ -13,7 +13,7 @@ struct vector {
  *                        FUNCIONES AUXILIARES
  * *****************************************************************/
 
-bool vector_rango_valido(vector_t* vector, size_t pos) {
+bool rango_valido(vector_t* vector, size_t pos) {
 	if ((vector_largo(vector) == 0) || (pos > (vector_largo(vector) - 1))) {
 		return false;
 	}
@@ -35,7 +35,7 @@ size_t vector_largo(vector_t* vector) {
 }
 
 bool vector_obtener(vector_t* vector, size_t pos, int* valor) {
-	if (vector_rango_valido(vector, pos) == true) {
+	if (rango_valido(vector, pos)) {
 		*valor = vector->datos[pos];
 		return true;
 	}
@@ -44,7 +44,7 @@ bool vector_obtener(vector_t* vector, size_t pos, int* valor) {
 }
 
 bool vector_guardar(vector_t* vector, size_t pos, int valor) {
-	if (vector_rango_valido(vector, pos) == true) {
+	if (rango_valido(vector, pos)) {
 		vector->datos[pos] = valor;
 		return true;
 	}
@@ -55,12 +55,12 @@ bool vector_guardar(vector_t* vector, size_t pos, int valor) {
 vector_t* vector_crear(size_t tam) {
     vector_t* vector = malloc(sizeof(vector_t));
 
-    if (vector == NULL) {
+    if (!vector) {
         return NULL;
     }
     vector->datos = malloc(tam * sizeof(int));
 
-    if (tam > 0 && vector->datos == NULL) {
+    if (tam > 0 && !vector->datos) {
         free(vector);
         return NULL;
     }
@@ -71,7 +71,7 @@ vector_t* vector_crear(size_t tam) {
 bool vector_redimensionar(vector_t* vector, size_t tam_nuevo) {
     int* datos_nuevo = realloc(vector->datos, tam_nuevo * sizeof(int));
 
-    if (tam_nuevo > 0 && datos_nuevo == NULL) {
+    if (tam_nuevo > 0 && !datos_nuevo) {
         return false;
     }
 
