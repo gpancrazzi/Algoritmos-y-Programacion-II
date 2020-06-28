@@ -14,9 +14,9 @@ static void prueba_crear_abb_vacio() {
 	
 	print_test("Prueba abb crear abb vacio", abb);
 	print_test("Prueba abb la cantidad de elementos es 0", abb_cantidad(abb) == 0);
-	print_test("Prueba abb obtener clave A, es NULL, no existe", abb_obtener(abb, "A") == NULL);
-	print_test("Prueba abb pertenece clave A, es false, no existe", abb_pertenece(abb, "A") == false);
-    print_test("Prueba abb borrar clave A, es NULL, no existe", abb_borrar(abb, "A") == NULL);
+	print_test("Prueba abb obtener clave A, es NULL, no existe", !abb_obtener(abb, "A"));
+	print_test("Prueba abb pertenece clave A, es false, no existe", !abb_pertenece(abb, "A"));
+    print_test("Prueba abb borrar clave A, es NULL, no existe", !abb_borrar(abb, "A"));
 	
 	abb_destruir(abb);
 }
@@ -40,10 +40,10 @@ static void prueba_abb_insertar() {
     char *clave2 = "H", *valor2 = "miau";
     char *clave3 = "B", *valor3 = "mu";
     
-    print_test("Prueba abb insertar clave1", abb_guardar(abb, clave1, valor1) == true);
+    print_test("Prueba abb insertar clave1", abb_guardar(abb, clave1, valor1));
     print_test("Prueba abb la cantidad de elementos es 1", abb_cantidad(abb) == 1);
     print_test("Prueba abb obtener clave1 es valor1", abb_obtener(abb, clave1) == valor1);
-    print_test("Prueba abb pertenece clave1, es true", abb_pertenece(abb, clave1) == true);
+    print_test("Prueba abb pertenece clave1, es true", abb_pertenece(abb, clave1));
     print_test("Prueba abb borrar clave1, es valor1", abb_borrar(abb, clave1) == valor1);
     print_test("Prueba abb la cantidad de elementos es 0", abb_cantidad(abb) == 0);
 
@@ -173,7 +173,7 @@ static void prueba_abb_valor_null() {
 }
 
 void guardar_claves_desordenadas(abb_t* abb, char* clave, size_t** arreglo, size_t inicio, size_t fin, bool* ok) {
-	if (fin <= inicio) {
+	if (fin == inicio) {
 		return;
 	}
 	
@@ -190,11 +190,6 @@ void guardar_claves_desordenadas(abb_t* abb, char* clave, size_t** arreglo, size
 
 size_t calcular_cantidad_de_digitos(size_t base) {
 	size_t cant_digitos = 0;
-	
-	if (base < 0) {
-		base *= -1;
-		cant_digitos++;
-	}
 	
 	while (base > 0) {
 		base = base / 10;

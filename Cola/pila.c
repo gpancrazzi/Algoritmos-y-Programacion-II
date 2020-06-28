@@ -3,6 +3,7 @@
 
 #define CAPACIDAD_INICIAL 4
 #define CONSTANTE_REDIMENSION 2
+#define CANTIDAD_MINIMA_REDIMENSION 4
 
 /* ******************************************************************
  *                        ESTRUCTURA DE DATOS
@@ -18,11 +19,11 @@ struct pila {
  *                        FUNCIONES AUXILIARES
  * *****************************************************************/
  
-bool pila_redimensionar(pila_t *pila, size_t capacidad) {
+bool redimensionar(pila_t *pila, size_t capacidad) {
 	void** temp_datos = realloc(pila->datos, sizeof(void*) * capacidad);
 	
-	if (temp_datos == NULL) {
-		return false; 
+	if (!temp_datos) {
+		return false;
 	}
 	
 	pila->capacidad = capacidad;
@@ -37,18 +38,18 @@ bool pila_redimensionar(pila_t *pila, size_t capacidad) {
 pila_t* pila_crear(void) {
 	pila_t* pila = malloc(sizeof(pila_t));
 	
-	if (pila == NULL) {
+	if (!pila) {
 		return NULL;
 	}
 	
 	pila->cantidad = 0;
 	pila->capacidad = CAPACIDAD_INICIAL;
 	pila->datos = malloc(sizeof(void*) * pila->capacidad);
-	
-	if (pila->datos == NULL) {
+	if (!pila->datos) {
 		free(pila);
 		return NULL;
 	}
+	
 	return pila;
 }
 
@@ -58,15 +59,12 @@ void pila_destruir(pila_t *pila) {
 }
 
 bool pila_esta_vacia(const pila_t *pila) {
-	if (pila->cantidad == 0) {
-		return true;
-	}
-	return false;
+	return pila->cantidad == 0;
 }
 
 bool pila_apilar(pila_t *pila, void* valor) {
 	if (pila->cantidad == pila->capacidad) {
-		if (pila_redimensionar(pila, pila->capacidad * CONSTANTE_REDIMENSION) == false) {
+		if (!redimensionar(pila, pila->capacidad * CONSTANTE_REDIMENSION)) {
 			return false;
 		}
 	}
@@ -77,19 +75,20 @@ bool pila_apilar(pila_t *pila, void* valor) {
 }
 
 void* pila_ver_tope(const pila_t *pila) {
-	if (pila_esta_vacia(pila) == false) {
+	if (!pila_esta_vacia(pila)) {
 		return pila->datos[pila->cantidad - 1];
 	}
+	
 	return NULL;
 }
 
 void* pila_desapilar(pila_t *pila) {
-	if (pila_esta_vacia(pila) == true) {
+	if (pila_esta_vacia(pila)) {
 		return NULL;
 	}
 	
-	if ((pila->cantidad <= (pila->capacidad / 4)) && ((pila->capacidad / CONSTANTE_REDIMENSION) >= CAPACIDAD_INICIAL)) {
-		pila_redimensionar(pila, pila->capacidad / CONSTANTE_REDIMENSION);
+	if ((pila->cantidad <= (pila->capacidad / CANTIDAD_MINIMA_REDIMENSION)) && ((pila->capacidad / CONSTANTE_REDIMENSION) >= CAPACIDAD_INICIAL)) {
+		redimensionar(pila, pila->capacidad / CONSTANTE_REDIMENSION);
 	}
 	
 	void* temp_ptr = pila->datos[pila->cantidad - 1];

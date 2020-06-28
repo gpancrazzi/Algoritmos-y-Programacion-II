@@ -19,7 +19,7 @@ struct pila {
  *                        FUNCIONES AUXILIARES
  * *****************************************************************/
  
-bool pila_redimensionar(pila_t *pila, size_t capacidad) {
+bool redimensionar(pila_t *pila, size_t capacidad) {
 	void** temp_datos = realloc(pila->datos, sizeof(void*) * capacidad);
 	
 	if (!temp_datos) {
@@ -64,7 +64,7 @@ bool pila_esta_vacia(const pila_t *pila) {
 
 bool pila_apilar(pila_t *pila, void* valor) {
 	if (pila->cantidad == pila->capacidad) {
-		if (!pila_redimensionar(pila, pila->capacidad * CONSTANTE_REDIMENSION)) {
+		if (!redimensionar(pila, pila->capacidad * CONSTANTE_REDIMENSION)) {
 			return false;
 		}
 	}
@@ -88,7 +88,7 @@ void* pila_desapilar(pila_t *pila) {
 	}
 	
 	if ((pila->cantidad <= (pila->capacidad / CANTIDAD_MINIMA_REDIMENSION)) && ((pila->capacidad / CONSTANTE_REDIMENSION) >= CAPACIDAD_INICIAL)) {
-		pila_redimensionar(pila, pila->capacidad / CONSTANTE_REDIMENSION);
+		redimensionar(pila, pila->capacidad / CONSTANTE_REDIMENSION);
 	}
 	
 	void* temp_ptr = pila->datos[pila->cantidad - 1];

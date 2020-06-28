@@ -35,7 +35,7 @@ struct hash_iter {
  *                        FUNCIONES AUXILIARES
  * *****************************************************************/
 
-void hash_inicializar_variables (hash_t* hash, size_t capacidad) {
+void inicializar_variables (hash_t* hash, size_t capacidad) {
 	hash->capacidad = capacidad;
 	hash->cantidad = 0;
 	hash->borrados = 0;
@@ -45,7 +45,7 @@ void hash_inicializar_variables (hash_t* hash, size_t capacidad) {
 	}
 }
 
-size_t hash_funcion(const char *str, size_t capacidad) {
+size_t funcion_hash(const char *str, size_t capacidad) {
     size_t hash = 5381;
     int c;
 
@@ -56,7 +56,7 @@ size_t hash_funcion(const char *str, size_t capacidad) {
     return hash % capacidad;
 }
 
-void hash_obtener_nueva_posicion (const hash_t* hash, size_t* pos) {
+void obtener_nueva_posicion (const hash_t* hash, size_t* pos) {
 	if (*pos >= (hash->capacidad - 1)) {
 		*pos = 0;
 	} else {
@@ -64,8 +64,8 @@ void hash_obtener_nueva_posicion (const hash_t* hash, size_t* pos) {
 	}
 }
 
-size_t hash_buscar_posicion_clave (const hash_t* hash, const char* clave) {
-	size_t pos = hash_funcion(clave, hash->capacidad);
+size_t buscar_posicion_clave (const hash_t* hash, const char* clave) {
+	size_t pos = funcion_hash(clave, hash->capacidad);
 	
 	if (hash->campos[pos].estado == vacio) {
 		return pos;
@@ -75,20 +75,20 @@ size_t hash_buscar_posicion_clave (const hash_t* hash, const char* clave) {
 		if ((hash->campos[pos].estado == ocupado) && (strcmp(hash->campos[pos].clave, clave) == 0)) {
 			return pos;
 		}
-		hash_obtener_nueva_posicion(hash, &pos);
+		obtener_nueva_posicion(hash, &pos);
 	}
 	
 	return pos;
 }
 
-void hash_guardar_campo (hash_t* hash, char* clave, void* dato, size_t pos) {
+void guardar_campo (hash_t* hash, char* clave, void* dato, size_t pos) {
 	hash->campos[pos].clave = clave;
 	hash->campos[pos].valor = dato;
 	hash->campos[pos].estado = ocupado;
 	hash->cantidad++;
 }
 
-bool hash_redimensionar(hash_t *hash, size_t capacidad) {
+bool redimensionar(hash_t *hash, size_t capacidad) {
 	campos_t* temp_campos = malloc(sizeof(campos_t) * capacidad);
 	
 	if (!temp_campos) {
@@ -98,12 +98,12 @@ bool hash_redimensionar(hash_t *hash, size_t capacidad) {
 	size_t ant_capacidad = hash->capacidad;
 	campos_t* ant_campos = hash->campos;
 	hash->campos = temp_campos;
-	hash_inicializar_variables(hash, capacidad);
+	inicializar_variables(hash, capacidad);
 	size_t pos;
 	for (size_t i = 0; i < ant_capacidad; i++) {
 		if (ant_campos[i].estado == ocupado) {
-			pos = hash_buscar_posicion_clave(hash, ant_campos[i].clave);
-			hash_guardar_campo(hash, ant_campos[i].clave, ant_campos[i].valor, pos);
+			pos = buscar_posicion_clave(hash, ant_campos[i].clave);
+			guardar_campo(hash, ant_campos[i].clave, ant_campos[i].valor, pos);
 		}
 	}
 	
@@ -128,7 +128,7 @@ hash_t *hash_crear(hash_destruir_dato_t destruir_dato) {
 		return NULL;
 	}
 	
-	hash_inicializar_variables(hash, CAPACIDAD_INICIAL);
+	inicializar_variables(hash, CAPACIDAD_INICIAL);
 	hash->destruir_dato = destruir_dato;
 	return hash;
 }
@@ -141,13 +141,13 @@ bool hash_guardar(hash_t *hash, const char *clave, void *dato) {
 	}
 	
 	if ((hash->cantidad + hash->borrados) == ((hash->capacidad * 70) / 100)){
-		if (!hash_redimensionar(hash, hash->capacidad * CONSTANTE_DE_REDIMENSION)) {
+		if (!redimensionar(hash, hash->capacidad * CONSTANTE_DE_REDIMENSION)) {
 			free(clave_aux);
 			return false;
 		}
 	}
 	
-	size_t pos = hash_buscar_posicion_clave(hash, clave);
+	size_t pos = buscar_posicion_clave(hash, clave);
 	if (hash->campos[pos].estado == ocupado) {
 		if (hash->destruir_dato) {
 			hash->destruir_dato(hash->campos[pos].valor);
@@ -157,7 +157,7 @@ bool hash_guardar(hash_t *hash, const char *clave, void *dato) {
 		return true;
 	}
 	
-	hash_guardar_campo(hash, clave_aux, dato, pos);
+	guardar_campo(hash, clave_aux, dato, pos);
 	return true;
 }
 
@@ -169,10 +169,10 @@ void *hash_borrar(hash_t *hash, const char *clave) {
 		} else {
 			prox_capacidad = hash->capacidad / CONSTANTE_DE_REDIMENSION; 
 		}
-		hash_redimensionar(hash, prox_capacidad);
+		redimensionar(hash, prox_capacidad);
 	}
 	
-	size_t pos = hash_buscar_posicion_clave(hash, clave);
+	size_t pos = buscar_posicion_clave(hash, clave);
 	if (hash->campos[pos].estado != ocupado) {
 		return NULL;
 	}
@@ -185,7 +185,7 @@ void *hash_borrar(hash_t *hash, const char *clave) {
 }
 
 void *hash_obtener(const hash_t *hash, const char *clave) {
-	size_t pos = hash_buscar_posicion_clave(hash, clave);
+	size_t pos = buscar_posicion_clave(hash, clave);
 	
 	if (hash->campos[pos].estado == ocupado) {
 		return hash->campos[pos].valor;
@@ -195,7 +195,7 @@ void *hash_obtener(const hash_t *hash, const char *clave) {
 }
 
 bool hash_pertenece(const hash_t *hash, const char *clave) {
-	return (hash->campos[hash_buscar_posicion_clave(hash, clave)].estado == ocupado);
+	return (hash->campos[buscar_posicion_clave(hash, clave)].estado == ocupado);
 }
 
 size_t hash_cantidad(const hash_t *hash) {
@@ -213,7 +213,7 @@ void hash_destruir(hash_t *hash) {
 				hash_borrar(hash, hash->campos[pos].clave);
 			}
 		}
-		hash_obtener_nueva_posicion(hash, &pos);
+		obtener_nueva_posicion(hash, &pos);
 	}
 	
 	free(hash->campos);

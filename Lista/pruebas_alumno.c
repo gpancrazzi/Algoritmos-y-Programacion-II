@@ -11,10 +11,10 @@ void pruebas_lista_enlistar_desenlistar() {
 	void* ptr[] = {&num[0], &num[1], &num[2], &num[3], &num[4], &num[5], &num[6]};
 	lista_t* lista1 = lista_crear();
 	
-	print_test("Prueba lista crear lista", lista1 != NULL);
-	print_test("Prueba lista el primer elemento de la lista es NULL", lista_ver_primero(lista1) == NULL);
-	print_test("Prueba lista el ultimo elemento de la lista es NULL", lista_ver_ultimo(lista1) == NULL);
-	print_test("Prueba lista borrar el primer elemento de la lista es NULL", lista_borrar_primero(lista1) == NULL);
+	print_test("Prueba lista crear lista", lista1);
+	print_test("Prueba lista el primer elemento de la lista es NULL", !lista_ver_primero(lista1));
+	print_test("Prueba lista el ultimo elemento de la lista es NULL", !lista_ver_ultimo(lista1));
+	print_test("Prueba lista borrar el primer elemento de la lista es NULL", !lista_borrar_primero(lista1));
 	print_test("Prueba lista la cantidad de elementos de la lista es 0", lista_largo(lista1) == 0);
 	print_test("Prueba lista la lista esta vacia", lista_esta_vacia(lista1));
 	print_test("Prueba lista enlistar un elemento al principio de la lista es true", lista_insertar_primero(lista1, ptr[0]));
@@ -66,20 +66,20 @@ void pruebas_lista_enlistar_desenlistar() {
 void pruebas_lista_elementos_NULL() {
 	lista_t* lista1 = lista_crear();
 	
-	print_test("Prueba lista crear lista", lista1 != NULL);
-	print_test("Prueba lista el primer elemento de la lista es NULL", lista_ver_primero(lista1) == NULL);
-	print_test("Prueba lista el ultimo elemento de la lista es NULL", lista_ver_ultimo(lista1) == NULL);
-	print_test("Prueba lista borrar el primer elemento de la lista es NULL", lista_borrar_primero(lista1) == NULL);
+	print_test("Prueba lista crear lista", lista1);
+	print_test("Prueba lista el primer elemento de la lista es NULL", !lista_ver_primero(lista1));
+	print_test("Prueba lista el ultimo elemento de la lista es NULL", !lista_ver_ultimo(lista1));
+	print_test("Prueba lista borrar el primer elemento de la lista es NULL", !lista_borrar_primero(lista1));
 	print_test("Prueba lista la cantidad de elementos de la lista es 0", lista_largo(lista1) == 0);
 	print_test("Prueba lista la lista esta vacia", lista_esta_vacia(lista1));
 	print_test("Prueba lista enlistar un elemento NULL al final de la lista es true", lista_insertar_ultimo(lista1, NULL));
-	print_test("Prueba lista el primer elemento de la lista es el correcto", lista_ver_primero(lista1) == NULL);
-	print_test("Prueba lista el ultimo elemento de la lista es el correcto", lista_ver_ultimo(lista1) == NULL);
+	print_test("Prueba lista el primer elemento de la lista es el correcto", !lista_ver_primero(lista1));
+	print_test("Prueba lista el ultimo elemento de la lista es el correcto", !lista_ver_ultimo(lista1));
 	print_test("Prueba lista la cantidad de elementos de la lista es 1", lista_largo(lista1) == 1);
 	print_test("Prueba lista la lista no esta vacia", !lista_esta_vacia(lista1));
 	print_test("Prueba lista enlistar un elemento NULL al principio de la lista es true", lista_insertar_primero(lista1, NULL));
-	print_test("Prueba lista el primer elemento de la lista es el correcto", lista_ver_primero(lista1) == NULL);
-	print_test("Prueba lista el ultimo elemento de la lista es el correcto", lista_ver_ultimo(lista1) == NULL);
+	print_test("Prueba lista el primer elemento de la lista es el correcto", !lista_ver_primero(lista1));
+	print_test("Prueba lista el ultimo elemento de la lista es el correcto", !lista_ver_ultimo(lista1));
 	print_test("Prueba lista la cantidad de elementos de la lista es 2", lista_largo(lista1) == 2);
 	//Pruebo destruir la lista.
 	lista_destruir(lista1, NULL);
@@ -91,12 +91,12 @@ void pruebas_lista_iterador_externo() {
 	void* ptr[] = {&num[0], &num[1], &num[2], &num[3], &num[4], &num[5], &num[6]};
 	lista_t* lista1 = lista_crear();
 	
-	print_test("Prueba lista crear lista", lista1 != NULL);
+	print_test("Prueba lista crear lista", lista1);
 	print_test("Prueba lista enlistar un elemento al principio de la lista es true", lista_insertar_primero(lista1, ptr[0]));
 	print_test("Prueba lista enlistar un elemento al principio de la lista es true", lista_insertar_primero(lista1, ptr[1]));
 	print_test("Prueba lista enlistar un elemento al principio de la lista es true", lista_insertar_primero(lista1, ptr[2]));
 	lista_iter_t* iter1 = lista_iter_crear(lista1);
-	print_test("Prueba lista iterador crear iterador externo", iter1 != NULL);
+	print_test("Prueba lista iterador crear iterador externo", iter1);
 	print_test("Prueba lista iterador el valor actual es el correcto", lista_iter_ver_actual(iter1) == ptr[2]);
 	print_test("Prueba lista iterador el iterador no se encuentra al final de la lista", !lista_iter_al_final(iter1));
 	print_test("Prueba lista iterador borrar un elemento devuelve el valor correcto", lista_iter_borrar(iter1) == ptr[2]);
@@ -123,16 +123,16 @@ void pruebas_lista_iterador_externo() {
 	print_test("Prueba lista la cantidad de elementos de la lista es 4", lista_largo(lista1) == 4);
 	print_test("Prueba lista iterador el elemento insertado se encuentra al final de la lista", lista_ver_ultimo(lista1) == ptr[5]);
 	print_test("Prueba lista iterador borrar un elemento devuelve el valor correcto", lista_iter_borrar(iter1) == ptr[5]);
-	print_test("Prueba lista iterador el valor actual del iterador es NULL", lista_iter_ver_actual(iter1) == NULL);
+	print_test("Prueba lista iterador el valor actual del iterador es NULL", !lista_iter_ver_actual(iter1));
 	print_test("Prueba lista la cantidad de elementos de la lista es 3", lista_largo(lista1) == 3);
-	print_test("Prueba lista iterador borrar un elemento devuelve NULL", lista_iter_borrar(iter1) == NULL);
-	print_test("Prueba lista iterador el valor actual del iterador es NULL", lista_iter_ver_actual(iter1) == NULL);
+	print_test("Prueba lista iterador borrar un elemento devuelve NULL", !lista_iter_borrar(iter1));
+	print_test("Prueba lista iterador el valor actual del iterador es NULL", !lista_iter_ver_actual(iter1));
 	print_test("Prueba lista iterador el iterador se encuentra al final de la lista", lista_iter_al_final(iter1));
 	print_test("Prueba lista iterador avanzar un elemento es false", !lista_iter_avanzar(iter1));
 	lista_iter_destruir(iter1);
 	print_test("Prueba lista iterador el iterador externo fue destruido", true);
 	lista_iter_t* iter2 = lista_iter_crear(lista1);
-	print_test("Prueba lista iterador crear otro iterador externo", iter2 != NULL);
+	print_test("Prueba lista iterador crear otro iterador externo", iter2);
 	print_test("Prueba lista iterador el valor actual es el correcto", lista_iter_ver_actual(iter2) == ptr[3]);
 	print_test("Prueba lista iterador avanzar un elemento es true", lista_iter_avanzar(iter2));
 	print_test("Prueba lista iterador el valor actual es el correcto", lista_iter_ver_actual(iter2) == ptr[1]);
@@ -143,14 +143,14 @@ void pruebas_lista_iterador_externo() {
 	lista_iter_destruir(iter2);
 	print_test("Prueba lista iterador el iterador externo fue destruido", true);
 	lista_iter_t* iter3 = lista_iter_crear(lista1);
-	print_test("Prueba lista iterador crear un tercer iterador externo", iter3 != NULL);
+	print_test("Prueba lista iterador crear un tercer iterador externo", iter3);
 	print_test("Prueba lista iterador borrar un elemento devuelve el valor correcto", lista_iter_borrar(iter3) == ptr[3]);
 	print_test("Prueba lista iterador borrar un elemento devuelve el valor correcto", lista_iter_borrar(iter3) == ptr[1]);
 	print_test("Prueba lista iterador borrar un elemento devuelve el valor correcto", lista_iter_borrar(iter3) == ptr[0]);
-	print_test("Prueba lista iterador el valor actual del iterador es NULL", lista_iter_ver_actual(iter3) == NULL);
-	print_test("Prueba lista el primer elemento de la lista es NULL", lista_ver_primero(lista1) == NULL);
-	print_test("Prueba lista el ultimo elemento de la lista es NULL", lista_ver_ultimo(lista1) == NULL);
-	print_test("Prueba lista borrar el primer elemento de la lista es NULL", lista_borrar_primero(lista1) == NULL);
+	print_test("Prueba lista iterador el valor actual del iterador es NULL", !lista_iter_ver_actual(iter3));
+	print_test("Prueba lista el primer elemento de la lista es NULL", !lista_ver_primero(lista1));
+	print_test("Prueba lista el ultimo elemento de la lista es NULL", !lista_ver_ultimo(lista1));
+	print_test("Prueba lista borrar el primer elemento de la lista es NULL", !lista_borrar_primero(lista1));
 	print_test("Prueba lista la cantidad de elementos de la lista es 0", lista_largo(lista1) == 0);
 	print_test("Prueba lista la lista esta vacia", lista_esta_vacia(lista1));
 	print_test("Prueba lista iterador insertar un elemento con el iterador externo es true", lista_iter_insertar(iter3, ptr[6]));
@@ -207,7 +207,7 @@ void pruebas_lista_destruir_memoria_dinamica() {
 	int* num3 = malloc(sizeof(int));
 	
 	lista_t* lista1 = lista_crear();
-	print_test("Prueba lista crear lista", lista1 != NULL);
+	print_test("Prueba lista crear lista", lista1);
 	print_test("Prueba lista enlistar un elemento de memoria dinamica al principio de la lista es true", lista_insertar_primero(lista1, num1));
 	print_test("Prueba lista enlistar un elemento de memoria dinamica al principio de la lista es true", lista_insertar_primero(lista1, num2));
 	print_test("Prueba lista enlistar un elemento de memoria dinamica al principio de la lista es true", lista_insertar_primero(lista1, num3));
@@ -221,7 +221,7 @@ void pruebas_lista_destruir_pila() {
 	pila_t* pila3 = pila_crear();
 	
 	lista_t* lista1 = lista_crear();
-	print_test("Prueba lista crear lista", lista1 != NULL);
+	print_test("Prueba lista crear lista", lista1);
 	print_test("Prueba lista enlistar una pila al principio de la lista es true", lista_insertar_primero(lista1, pila1));
 	print_test("Prueba lista enlistar una pila al principio de la lista es true", lista_insertar_primero(lista1, pila2));
 	print_test("Prueba lista enlistar una pila al principio de la lista es true", lista_insertar_primero(lista1, pila3));
@@ -232,7 +232,7 @@ void pruebas_lista_destruir_pila() {
 void pruebas_lista_destruir_vacia() {
 	lista_t* lista1 = lista_crear();
 	
-	print_test("Prueba lista crear lista", lista1 != NULL);
+	print_test("Prueba lista crear lista", lista1);
 	lista_destruir(lista1, NULL);
 	print_test("Prueba lista la lista vacia fue destruida con parametro NULL", true);
 }
@@ -241,7 +241,7 @@ void pruebas_lista_destruir_memoria_estatica() {
 	int num4 = 2, num5 = 6;
 	lista_t* lista1 = lista_crear();
 	
-	print_test("Prueba lista crear lista", lista1 != NULL);
+	print_test("Prueba lista crear lista", lista1);
 	print_test("Prueba lista enlistar un elemento de memoria estatica al principio de la lista es true", lista_insertar_primero(lista1, &num4));
 	print_test("Prueba lista enlistar un elemento de memoria estatica al principio de la lista es true", lista_insertar_primero(lista1, &num5));
 	lista_destruir(lista1, NULL);
@@ -281,9 +281,9 @@ void pruebas_lista_volumen_enlistar_primero() {
 	}
 	
 	print_test("Prueba lista en volumen se pudieron desenlistar todos los elementos", ok);
-	print_test("Prueba lista el primer elemento de la lista es NULL", lista_ver_primero(lista1) == NULL);
-	print_test("Prueba lista el ultimo elemento de la lista es NULL", lista_ver_ultimo(lista1) == NULL);
-	print_test("Prueba lista borrar el primer elemento de la lista es NULL", lista_borrar_primero(lista1) == NULL);
+	print_test("Prueba lista el primer elemento de la lista es NULL", !lista_ver_primero(lista1));
+	print_test("Prueba lista el ultimo elemento de la lista es NULL", !lista_ver_ultimo(lista1));
+	print_test("Prueba lista borrar el primer elemento de la lista es NULL", !lista_borrar_primero(lista1));
 	print_test("Prueba lista la cantidad de elementos de la lista es 0", lista_largo(lista1) == 0);
 	print_test("Prueba lista la lista esta vacia", lista_esta_vacia(lista1));
 	lista_destruir(lista1, NULL);
@@ -311,9 +311,9 @@ void pruebas_lista_volumen_enlistar_ultimo() {
 	}
 	
 	print_test("Prueba lista en volumen se pudieron desenlistar todos los elementos", ok);
-	print_test("Prueba lista el primer elemento de la lista es NULL", lista_ver_primero(lista1) == NULL);
-	print_test("Prueba lista el ultimo elemento de la lista es NULL", lista_ver_ultimo(lista1) == NULL);
-	print_test("Prueba lista borrar el primer elemento de la lista es NULL", lista_borrar_primero(lista1) == NULL);
+	print_test("Prueba lista el primer elemento de la lista es NULL", !lista_ver_primero(lista1));
+	print_test("Prueba lista el ultimo elemento de la lista es NULL", !lista_ver_ultimo(lista1));
+	print_test("Prueba lista borrar el primer elemento de la lista es NULL", !lista_borrar_primero(lista1));
 	print_test("Prueba lista la cantidad de elementos de la lista es 0", lista_largo(lista1) == 0);
 	print_test("Prueba lista la lista esta vacia", lista_esta_vacia(lista1));
 	lista_destruir(lista1, NULL);
@@ -344,9 +344,9 @@ void pruebas_lista_volumen_iterador_externo() {
 	print_test("Prueba lista en volumen se pudieron desenlistar todos los elementos con iterador externo", ok);
 	lista_iter_destruir(iter1);
 	print_test("Prueba lista el iterador externo fue destruido", true);
-	print_test("Prueba lista el primer elemento de la lista es NULL", lista_ver_primero(lista1) == NULL);
-	print_test("Prueba lista el ultimo elemento de la lista es NULL", lista_ver_ultimo(lista1) == NULL);
-	print_test("Prueba lista borrar el primer elemento de la lista es NULL", lista_borrar_primero(lista1) == NULL);
+	print_test("Prueba lista el primer elemento de la lista es NULL", !lista_ver_primero(lista1));
+	print_test("Prueba lista el ultimo elemento de la lista es NULL", !lista_ver_ultimo(lista1));
+	print_test("Prueba lista borrar el primer elemento de la lista es NULL", !lista_borrar_primero(lista1));
 	print_test("Prueba lista la cantidad de elementos de la lista es 0", lista_largo(lista1) == 0);
 	print_test("Prueba lista la lista esta vacia", lista_esta_vacia(lista1));
 	lista_destruir(lista1, NULL);

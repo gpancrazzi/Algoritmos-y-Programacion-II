@@ -33,15 +33,15 @@ struct abb_iter {
  *                        FUNCIONES AUXILIARES
  * *****************************************************************/
 
-nodo_abb_t* abb_crear_nodo(const char *clave, void *dato) {
+nodo_abb_t* crear_nodo(const char *clave, void *dato) {
 	nodo_abb_t* nodo_arbol = malloc(sizeof(nodo_abb_t));
 	
-	if (nodo_arbol == NULL) {
+	if (!nodo_arbol) {
 		return NULL;
 	}
 	
 	char* clave_dup = strdup(clave);
-	if (clave_dup == NULL) {
+	if (!clave_dup) {
 		free(nodo_arbol);
 		return NULL;
 	}
@@ -53,10 +53,10 @@ nodo_abb_t* abb_crear_nodo(const char *clave, void *dato) {
 	return nodo_arbol;
 }
 
-nodo_abb_t** abb_obtener_puntero_nodo(nodo_abb_t** nodo_ptr, abb_comparar_clave_t cmp, const char* clave) {
+nodo_abb_t** obtener_puntero_nodo(nodo_abb_t** nodo_ptr, abb_comparar_clave_t cmp, const char* clave) {
 	nodo_abb_t* nodo_arbol = *nodo_ptr;
 	
-	if (nodo_arbol == NULL) {
+	if (!nodo_arbol) {
 		return nodo_ptr;
 	}
 	
@@ -65,61 +65,61 @@ nodo_abb_t** abb_obtener_puntero_nodo(nodo_abb_t** nodo_ptr, abb_comparar_clave_
 	}
 	
 	if (cmp(nodo_arbol->clave, clave) > 0) {
-		return abb_obtener_puntero_nodo(&nodo_arbol->izq, cmp, clave);
+		return obtener_puntero_nodo(&nodo_arbol->izq, cmp, clave);
 	}
 	
-	return abb_obtener_puntero_nodo(&nodo_arbol->der, cmp, clave);
+	return obtener_puntero_nodo(&nodo_arbol->der, cmp, clave);
 }
 
-nodo_abb_t* abb_buscar_reemplazante(nodo_abb_t* nodo_arbol) {
-	if (nodo_arbol->der == NULL) {
+nodo_abb_t* buscar_reemplazante(nodo_abb_t* nodo_arbol) {
+	if (!nodo_arbol->der) {
 		return nodo_arbol;
 	}
 	
-	return abb_buscar_reemplazante(nodo_arbol->der);
+	return buscar_reemplazante(nodo_arbol->der);
 }
 
-void abb_destruir_nodos(nodo_abb_t* nodo_arbol, abb_destruir_dato_t destruir_dato) {
-	if (nodo_arbol == NULL) {
+void destruir_nodos(nodo_abb_t* nodo_arbol, abb_destruir_dato_t destruir_dato) {
+	if (!nodo_arbol) {
 		return;
 	}
 	
-	abb_destruir_nodos(nodo_arbol->izq, destruir_dato);
-	abb_destruir_nodos(nodo_arbol->der, destruir_dato);
+	destruir_nodos(nodo_arbol->izq, destruir_dato);
+	destruir_nodos(nodo_arbol->der, destruir_dato);
 	free((char*)nodo_arbol->clave);
-	if (destruir_dato != NULL) {
+	if (destruir_dato) {
 		destruir_dato(nodo_arbol->dato);
 	}
 	
 	free(nodo_arbol);
 }
 
-bool abb_iterar_in_order(nodo_abb_t* nodo_arbol, bool visitar(const char *, void *, void *), void *extra) {
-	if (nodo_arbol == NULL) {
+bool iterar_in_order(nodo_abb_t* nodo_arbol, bool visitar(const char *, void *, void *), void *extra) {
+	if (!nodo_arbol) {
 		return true;
 	}
 	
-	if (abb_iterar_in_order(nodo_arbol->izq, visitar, extra) == false) {
+	if (!iterar_in_order(nodo_arbol->izq, visitar, extra)) {
 		return false;
 	}
 	
-	if (visitar(nodo_arbol->clave, nodo_arbol->dato, extra) == false) {
+	if (!visitar(nodo_arbol->clave, nodo_arbol->dato, extra)) {
 		return false;
 	}
 	
-	return abb_iterar_in_order(nodo_arbol->der, visitar, extra);
+	return iterar_in_order(nodo_arbol->der, visitar, extra);
 }
 
-bool abb_apilar_nodos(nodo_abb_t* nodo_arbol, pila_t* pila) {
-	if (nodo_arbol == NULL) {
+bool apilar_nodos(nodo_abb_t* nodo_arbol, pila_t* pila) {
+	if (!nodo_arbol) {
 		return true;
 	}
 	
-	if (pila_apilar(pila, nodo_arbol) == false) {
+	if (!pila_apilar(pila, nodo_arbol)) {
 		return false;
 	}
 	
-	return abb_apilar_nodos(nodo_arbol->izq, pila);
+	return apilar_nodos(nodo_arbol->izq, pila);
 }
 
 void* borrar_nodo(abb_t* arbol, nodo_abb_t** ptr_nodo, nodo_abb_t* nodo_arbol, nodo_abb_t* nodo_hijo) {
@@ -152,33 +152,33 @@ void* borrar_nodo_con_dos_hijos(abb_t* arbol, nodo_abb_t** ptr_nodo, nodo_abb_t*
  * *****************************************************************/
 
 abb_t* abb_crear(abb_comparar_clave_t cmp, abb_destruir_dato_t destruir_dato) {
-	abb_t* arbol = malloc(sizeof(abb_t));
+	abb_t* abb = malloc(sizeof(abb_t));
 	
-	if (arbol == NULL) {
+	if (!abb) {
 		return NULL;
 	}
 	
-	arbol->raiz = NULL;
-	arbol->cmp = cmp;
-	arbol->destruir_dato = destruir_dato;
-	arbol->cantidad = 0;
-	return arbol;
+	abb->raiz = NULL;
+	abb->cmp = cmp;
+	abb->destruir_dato = destruir_dato;
+	abb->cantidad = 0;
+	return abb;
 }
 
 bool abb_guardar(abb_t *arbol, const char *clave, void *dato) {
-	nodo_abb_t** ptr_nodo = abb_obtener_puntero_nodo(&arbol->raiz, arbol->cmp, clave);
+	nodo_abb_t** ptr_nodo = obtener_puntero_nodo(&arbol->raiz, arbol->cmp, clave);
 	nodo_abb_t* nodo_arbol_temp = *ptr_nodo;
 	
-	if (nodo_arbol_temp != NULL) {
-		if (arbol->destruir_dato != NULL) {
+	if (nodo_arbol_temp) {
+		if (arbol->destruir_dato) {
 			arbol->destruir_dato(nodo_arbol_temp->dato);
 		}
 		nodo_arbol_temp->dato = dato;
 		return true;
 	}
 	
-	nodo_abb_t* nodo_arbol = abb_crear_nodo(clave, dato);
-	if (nodo_arbol == NULL) {
+	nodo_abb_t* nodo_arbol = crear_nodo(clave, dato);
+	if (!nodo_arbol) {
 		return false;
 	}
 	
@@ -201,7 +201,7 @@ void *abb_borrar(abb_t *arbol, const char *clave) {
 	
 	if (nodo_arbol_temp->der && !nodo_arbol_temp->izq) {
 		return borrar_nodo(arbol, ptr_nodo, nodo_arbol_temp, nodo_arbol_temp->der);
-	}
+	} 
 	
 	if (!nodo_arbol_temp->der && nodo_arbol_temp->izq) {
 		return borrar_nodo(arbol, ptr_nodo, nodo_arbol_temp, nodo_arbol_temp->izq);
@@ -212,10 +212,10 @@ void *abb_borrar(abb_t *arbol, const char *clave) {
 
 void *abb_obtener(const abb_t *arbol, const char *clave) {
 	abb_t* arbol_temp = (abb_t*)arbol;
-	nodo_abb_t** ptr_nodo = abb_obtener_puntero_nodo(&arbol_temp->raiz, arbol->cmp, clave);
+	nodo_abb_t** ptr_nodo = obtener_puntero_nodo(&arbol_temp->raiz, arbol->cmp, clave);
 	nodo_abb_t* nodo_arbol_temp = *ptr_nodo;
 	
-	if (nodo_arbol_temp == NULL) {
+	if (!nodo_arbol_temp) {
 		return NULL;
 	}
 	
@@ -224,10 +224,10 @@ void *abb_obtener(const abb_t *arbol, const char *clave) {
 
 bool abb_pertenece(const abb_t *arbol, const char *clave) {
 	abb_t* arbol_temp = (abb_t*)arbol;
-	nodo_abb_t** ptr_nodo = abb_obtener_puntero_nodo(&arbol_temp->raiz, arbol->cmp, clave);
+	nodo_abb_t** ptr_nodo = obtener_puntero_nodo(&arbol_temp->raiz, arbol->cmp, clave);
 	nodo_abb_t* nodo_arbol_temp = *ptr_nodo;
 	
-	if (nodo_arbol_temp == NULL) {
+	if (!nodo_arbol_temp) {
 		return false;
 	}
 	
@@ -239,7 +239,7 @@ size_t abb_cantidad(abb_t *arbol) {
 }
 
 void abb_destruir(abb_t *arbol) {
-	abb_destruir_nodos(arbol->raiz, arbol->destruir_dato);
+	destruir_nodos(arbol->raiz, arbol->destruir_dato);
 	free(arbol);
 }
 
@@ -248,7 +248,7 @@ void abb_destruir(abb_t *arbol) {
  * *****************************************************************/
  
 void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void *extra) {
-	abb_iterar_in_order(arbol->raiz, visitar, extra);
+	iterar_in_order(arbol->raiz, visitar, extra);
 }
  
  /* ******************************************************************
@@ -258,17 +258,17 @@ void abb_in_order(abb_t *arbol, bool visitar(const char *, void *, void *), void
 abb_iter_t *abb_iter_in_crear(const abb_t *arbol) {
 	abb_iter_t* iter = malloc(sizeof(abb_iter_t));
 	
-	if (iter == NULL) {
+	if (!iter) {
 		return NULL;
 	}
 	
 	pila_t* pila = pila_crear();
-	if (pila == NULL) {
+	if (!pila) {
 		free(iter);
 		return NULL;
 	}
 	
-	if (abb_apilar_nodos(arbol->raiz, pila) == false) {
+	if (!apilar_nodos(arbol->raiz, pila)) {
 		pila_destruir(pila);
 		free(iter);
 		return NULL;
@@ -280,16 +280,16 @@ abb_iter_t *abb_iter_in_crear(const abb_t *arbol) {
 }
 
 bool abb_iter_in_avanzar(abb_iter_t *iter) {
-	if (abb_iter_in_al_final(iter) == true) {
+	if (abb_iter_in_al_final(iter)) {
 		return false;
 	}
 	
 	nodo_abb_t* nodo_tope = (nodo_abb_t*)pila_desapilar(iter->pila);
-	return abb_apilar_nodos(nodo_tope->der, iter->pila);
+	return apilar_nodos(nodo_tope->der, iter->pila);
 }
 
 const char *abb_iter_in_ver_actual(const abb_iter_t *iter) {
-	if (abb_iter_in_al_final(iter) == true) {
+	if (abb_iter_in_al_final(iter)) {
 		return NULL;
 	}
 	
