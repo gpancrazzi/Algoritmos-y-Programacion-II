@@ -4,7 +4,7 @@
  *                        FUNCIONES AUXILIARES
  * *****************************************************************/
 
-bool vector_rango_valido(vector_t* vector, size_t pos) {
+bool rango_valido(vector_t* vector, size_t pos) {
 	if ((vector_largo(vector) == 0) || (pos > (vector_largo(vector) - 1))) {
 		return false;
 	}
@@ -26,7 +26,7 @@ size_t vector_largo(vector_t* vector) {
 }
 
 bool vector_obtener(vector_t* vector, size_t pos, int* valor) {
-	if (vector_rango_valido(vector, pos) == true) {
+	if (rango_valido(vector, pos) == true) {
 		*valor = vector->datos[pos];
 		return true;
 	}
@@ -35,7 +35,7 @@ bool vector_obtener(vector_t* vector, size_t pos, int* valor) {
 }
 
 bool vector_guardar(vector_t* vector, size_t pos, int valor) {
-	if (vector_rango_valido(vector, pos) == true) {
+	if (rango_valido(vector, pos) == true) {
 		vector->datos[pos] = valor;
 		return true;
 	}
