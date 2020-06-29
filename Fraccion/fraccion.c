@@ -103,7 +103,7 @@ fraccion_t* fraccion_crear(int numerador, int denominador) {
 	}
 	
 	fraccion_t* fraccion = malloc(sizeof(fraccion_t));
-	if (fraccion == NULL) {
+	if (!fraccion) {
 		return NULL;
 	}
 	
@@ -119,13 +119,13 @@ fraccion_t* fraccion_crear(int numerador, int denominador) {
 }
 
 fraccion_t* fraccion_sumar(fraccion_t* f1, fraccion_t* f2) {
-	if ((f1 == NULL) || (f2 == NULL)) {
+	if ((!f1) || (!f2)) {
 		return NULL;
 	}
 	
 	int denominador = calcular_denominador_en_suma(f1->denominador, f2->denominador);
 	fraccion_t* fraccion = fraccion_crear((denominador / f1->denominador) * f1->numerador + (denominador / f2->denominador) * f2->numerador, denominador);
-	if (fraccion == NULL) {
+	if (!fraccion) {
 		return NULL;
 	}
 	
@@ -135,12 +135,12 @@ fraccion_t* fraccion_sumar(fraccion_t* f1, fraccion_t* f2) {
 }
 
 fraccion_t* fraccion_mul(fraccion_t* f1, fraccion_t* f2) {
-	if ((f1 == NULL) || (f2 == NULL)) {
+	if ((!f1) || (!f2)) {
 		return NULL;
 	}
 	
 	fraccion_t* fraccion = fraccion_crear(f1->numerador * f2->numerador, f1->denominador * f2->denominador);
-	if (fraccion == NULL) {
+	if (!fraccion) {
 		return NULL;
 	}
 	
@@ -154,13 +154,13 @@ int fraccion_parte_entera(fraccion_t* fraccion) {
 }
 
 char* fraccion_representacion(fraccion_t* fraccion) {
-	if (fraccion == NULL) {
+	if (!fraccion) {
 		return NULL;
 	}
 	
 	int cantidad_caracteres = calcular_cantidad_de_caracteres(fraccion) + 1;
 	char* representacion = calloc(cantidad_caracteres, sizeof(char));
-	if (representacion == NULL) {
+	if (!representacion) {
 		return NULL;
 	}
 	
