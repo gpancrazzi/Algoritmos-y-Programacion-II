@@ -3,6 +3,7 @@
 
 #define CAPACIDAD_INICIAL 3
 #define CONSTANTE_REDIMENSION 2
+#define CANTIDAD_MINIMA_REDIMENSION 4
 
 /* ******************************************************************
  *                        ESTRUCTURA DE DATOS
@@ -203,7 +204,7 @@ void *heap_desencolar(heap_t *heap) {
 		return NULL;
 	}
 	
-	if ((heap->cantidad <= (heap->capacidad / 4)) && ((heap->capacidad / CONSTANTE_REDIMENSION) >= CAPACIDAD_INICIAL)) {
+	if ((heap->cantidad <= (heap->capacidad / CANTIDAD_MINIMA_REDIMENSION)) && ((heap->capacidad / CONSTANTE_REDIMENSION) >= CAPACIDAD_INICIAL)) {
 		redimensionar(heap, heap->capacidad / CONSTANTE_REDIMENSION);
 	}
 	
