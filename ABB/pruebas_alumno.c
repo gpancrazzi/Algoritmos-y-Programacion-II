@@ -393,7 +393,7 @@ static void prueba_abb_iterador_interno() {
     print_test("Prueba abb iterar_in_order la cantidad de elementos iterados es la correcta", contador == 2);
     abb_destruir(abb);
 }
- 
+
  /* ******************************************************************
  *                        FUNCION PRINCIPAL
  * *****************************************************************/

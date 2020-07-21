@@ -10,6 +10,9 @@ static void eliminar_fin_linea(char* linea) {
 	if (linea[len - 1] == '\n') {
 		linea[len - 1] = '\0';
 	}
+	if (linea[len - 2] == '\r') {
+		linea[len - 2] = '\0';
+	}
 }
 
 lista_t* csv_crear_estructura(const char* ruta_csv, void* (*creador) (char**, void*), void* extra) {
@@ -36,4 +39,3 @@ lista_t* csv_crear_estructura(const char* ruta_csv, void* (*creador) (char**, vo
 	fclose(archivo);
 	return lista;
 }
-

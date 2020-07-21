@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void pruebas_abb_alumno(void);
-
 void pruebas_abb_obtener_rango(void);
 
 /* ******************************************************************
@@ -12,8 +10,7 @@ void pruebas_abb_obtener_rango(void);
 
 int main(int argc, char *argv[])
 {
-    printf("~~~ PRUEBAS ALUMNO ~~~\n");
-    pruebas_abb_alumno();
+    printf("~~~ PRUEBAS PRIMITIVA TP2 ~~~\n");
     pruebas_abb_obtener_rango();
 
     return failure_count() > 0;

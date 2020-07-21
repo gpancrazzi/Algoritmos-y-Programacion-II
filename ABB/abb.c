@@ -1,6 +1,7 @@
 #define _POSIX_C_SOURCE 200809L
 #include "abb.h"
 #include "pila.h"
+#include "lista.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -33,7 +34,7 @@ struct abb_iter {
  *                        FUNCIONES AUXILIARES
  * *****************************************************************/
 
-nodo_abb_t* crear_nodo(const char *clave, void *dato) {
+nodo_abb_t* crear_nodo_abb(const char *clave, void *dato) {
 	nodo_abb_t* nodo_arbol = malloc(sizeof(nodo_abb_t));
 	
 	if (!nodo_arbol) {
@@ -147,6 +148,60 @@ void* borrar_nodo_con_dos_hijos(abb_t* arbol, nodo_abb_t** ptr_nodo, nodo_abb_t*
 	return dato;
 }
 
+char* obtener_inicio(nodo_abb_t* nodo) {
+	if (!nodo->izq) {
+		return (char*)nodo->clave;
+	}
+	
+	return obtener_inicio(nodo->izq);
+}
+
+char* obtener_fin(nodo_abb_t* nodo) {
+	if (!nodo->der) {
+		return (char*)nodo->clave;
+	}
+	
+	return obtener_fin(nodo->der);
+}
+
+bool rango_valido(abb_t* arbol, char* inicio, char* fin) {
+	if (arbol->cmp(inicio, fin) > 0) {
+		return false;
+	}
+	
+	if ((!abb_pertenece(arbol, inicio)) || (!abb_pertenece(arbol, fin))) {
+		return false;
+	}
+	
+	return true;
+}
+
+bool obtener_datos(nodo_abb_t* nodo, abb_comparar_clave_t cmp, lista_t* datos, char* inicio, char* fin) {
+	if (!nodo) {
+		return true;
+	}
+	
+	if ((cmp(nodo->clave, inicio) > 0) && (!obtener_datos(nodo->izq, cmp, datos, inicio, fin))) {
+		return false;
+	}
+	
+	if ((cmp(nodo->clave, inicio) < 0) && (!obtener_datos(nodo->der, cmp, datos, inicio, fin))) {
+		return false;
+	}
+	
+	if ((cmp(nodo->clave, inicio) >= 0) && (cmp(nodo->clave, fin) < 0)) {
+		if (!lista_insertar_ultimo(datos, nodo->dato) || (!obtener_datos(nodo->der, cmp, datos, inicio, fin))) {
+			return false;
+		}
+	}
+	
+	if (cmp(nodo->clave, fin) == 0) {
+		return lista_insertar_ultimo(datos, nodo->dato);
+	}
+	
+	return true;
+}
+
 /* ******************************************************************
  *                        PRIMITIVAS DEL ABB
  * *****************************************************************/
@@ -177,7 +232,7 @@ bool abb_guardar(abb_t *arbol, const char *clave, void *dato) {
 		return true;
 	}
 	
-	nodo_abb_t* nodo_arbol = crear_nodo(clave, dato);
+	nodo_abb_t* nodo_arbol = crear_nodo_abb(clave, dato);
 	if (!nodo_arbol) {
 		return false;
 	}
@@ -241,6 +296,41 @@ size_t abb_cantidad(abb_t *arbol) {
 void abb_destruir(abb_t *arbol) {
 	destruir_nodos(arbol->raiz, arbol->destruir_dato);
 	free(arbol);
+}
+
+lista_t* abb_obtener_rango(const abb_t* arbol, char* inicio, char* fin) {
+	abb_t* arbol_temp = (abb_t*)arbol;
+	
+	if (arbol_temp->cantidad == 0) {
+		return NULL;
+	}
+	
+	bool se_modifica_rango = false;
+	if ((!inicio) && (!fin)) {
+		inicio = obtener_inicio(arbol->raiz);
+		fin = obtener_fin(arbol->raiz);
+		se_modifica_rango = true;
+	} else if (!inicio) {
+		inicio = obtener_inicio(arbol->raiz);
+	} else if (!fin) {
+		fin = obtener_fin(arbol->raiz);
+	}
+	
+	if ((!se_modifica_rango) && (!rango_valido(arbol_temp, inicio, fin))) {
+		return NULL;
+	}
+	
+	lista_t* datos = lista_crear();
+	if (!datos) {
+		return NULL;
+	}
+	
+	if (!obtener_datos(arbol_temp->raiz, arbol_temp->cmp, datos, inicio, fin)) {
+		lista_destruir(datos, NULL);
+		return NULL;
+	}
+	
+	return datos;
 }
 
 /* ******************************************************************

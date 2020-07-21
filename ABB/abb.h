@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include "lista.h"
 
 struct abb;
 struct abb_iter;
@@ -56,6 +57,13 @@ size_t abb_cantidad(abb_t *arbol);
  * Post: La estructura abb fue destruida
  */
 void abb_destruir(abb_t *arbol);
+
+/* Obtiene los valores de un rango ordenado de claves, en caso de que algun parametro del rango sea NULL, se asume que 
+ * tal parametro coincide con la clave de menor o mayor valor segun corresponda.
+ * Pre: La estructura abb fue inicializada.
+ * Post: Se retorna una lista que posteriormente debe ser destruida con la funcion acorde. En caso de error, se retorna NULL.
+*/
+lista_t* abb_obtener_rango(const abb_t* arbol, char* inicio, char* fin);
 
 /* Recorre cada elemento del abb, desde el primero hasta el ultimo o hasta el indicado por la funcion visitar  
  * y realiza las acciones que se especifiquen en dicha funcion. 
