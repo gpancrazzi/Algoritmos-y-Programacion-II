@@ -31,6 +31,12 @@ Pos: se crea una cadena de texto en memoria dinamica.
 char* obtener_cadena_espaciada(char* str, size_t n, bool* str_se_modifica);
 
 /*
+Se recibe una cadena de texto y su largo.
+Pos: se elimina el caracter de salto de linea.
+*/
+void eliminar_fin_linea(char* linea, size_t len);
+
+/*
 Recibe una cadena de texto por parametro.
 Retorna true si se trata de un numero o false en caso contrario.
 */

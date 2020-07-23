@@ -89,6 +89,15 @@ char* obtener_cadena_espaciada(char* str, size_t n, bool* str_se_modifica) {
 	return NULL;
 }
 
+void eliminar_fin_linea(char* linea, size_t len) {
+	if (linea[len - 1] == '\n') {
+		linea[len - 1] = '\0';
+	}
+	if (linea[len - 2] == '\r') {
+		linea[len - 2] = '\0';
+	}
+}
+
 bool validar_numero(char* elem) {
 	size_t inicio = 0, largo = strlen(elem);
 	

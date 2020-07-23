@@ -10,6 +10,7 @@
 #define COMANDO_PEDIR_TURNO "PEDIR_TURNO"
 #define COMANDO_ATENDER "ATENDER_SIGUIENTE"
 #define COMANDO_INFORME "INFORME"
+#define ARGUMENTOS_VALIDOS 2
 
 void procesar_comando(const char* comando, const char** parametros) {
 	if (strcmp(comando, COMANDO_PEDIR_TURNO) == 0) {
@@ -23,28 +24,11 @@ void procesar_comando(const char* comando, const char** parametros) {
 	}
 }
 
-void eliminar_fin_linea(char* linea, size_t len) {
-	if (linea[len - 1] == '\n') {
-		linea[len - 1] = '\0';
-	}
-	if (linea[len - 2] == '\r') {
-		linea[len - 2] = '\0';
-	}
-}
-
 void procesar_entrada() {
-	cola_t* urgencias = cola_crear();
-	if (!urgencias) return;
-	
-	hash_t* especialidades = hash_crear(NULL);
-	if (!especialidades) {
-		cola_destruir(urgencias, NULL);
-		return;
-	}
-	
 	char* linea = NULL;
 	size_t c = 0;
 	ssize_t len = 0;
+	
 	while (len != -1) {
 		len = getline(&linea, &c, stdin);
 		if (len != -1) {
@@ -63,8 +47,6 @@ void procesar_entrada() {
 	}
 	
 	free(linea);
-	cola_destruir(urgencias, free);
-	hash_destruir(especialidades);
 }
 
 
