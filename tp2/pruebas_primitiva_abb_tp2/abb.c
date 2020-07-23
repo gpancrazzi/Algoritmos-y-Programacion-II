@@ -301,9 +301,7 @@ void abb_destruir(abb_t *arbol) {
 lista_t* abb_obtener_rango(const abb_t* arbol, char* inicio, char* fin) {
 	abb_t* arbol_temp = (abb_t*)arbol;
 	
-	if (arbol_temp->cantidad == 0) {
-		return NULL;
-	}
+	if (arbol_temp->cantidad == 0) return NULL;
 	
 	bool se_modifica_rango = false;
 	if ((!inicio) && (!fin)) {
@@ -316,14 +314,10 @@ lista_t* abb_obtener_rango(const abb_t* arbol, char* inicio, char* fin) {
 		fin = obtener_fin(arbol->raiz);
 	}
 	
-	if ((!se_modifica_rango) && (!rango_valido(arbol_temp, inicio, fin))) {
-		return NULL;
-	}
+	if ((!se_modifica_rango) && (!rango_valido(arbol_temp, inicio, fin))) return NULL;
 	
 	lista_t* datos = lista_crear();
-	if (!datos) {
-		return NULL;
-	}
+	if (!datos) return NULL;
 	
 	if (!obtener_datos(arbol_temp->raiz, arbol_temp->cmp, datos, inicio, fin)) {
 		lista_destruir(datos, NULL);
