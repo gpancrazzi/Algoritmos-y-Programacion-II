@@ -1,8 +1,10 @@
+#define _POSIX_C_SOURCE 200809L
 #include "input.h"
 #include "strutil.h"
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdio.h>
 
 /* ******************************************************************
  *                        FUNCIONES AUXILIARES
@@ -93,7 +95,6 @@ void eliminar_fin_linea(char* linea, size_t len) {
 	if (linea[len - 1] == '\n') {
 		linea[len - 1] = '\0';
 	}
-	
 	if (linea[len - 2] == '\r') {
 		linea[len - 2] = '\0';
 	}
@@ -124,4 +125,45 @@ bool validar_operador(char* elem, int* op, int cant_operadores, char** operv) {
 	}
 	
 	return false;
+}
+
+bool validar_cantidad_de_cadenas(char** cadenas, size_t n) {
+	if (!cadenas) return false;
+	
+	size_t i = 0;
+	while (cadenas[i]) {
+		if (i == n) return false;
+		i++;
+	}
+	
+	return i == n;
+}
+
+bool csv_crear_estructura(FILE* archivo, char separador, bool creador(char**, void*), void* extra) {
+	char* linea = NULL;
+	size_t c = 0;
+	
+	rewind(archivo);
+	ssize_t len = 0;
+	while (len != -1) {
+		len = getline(&linea, &c, archivo);
+		if (len != -1) {
+			eliminar_fin_linea(linea, len);
+			char** campos = split(linea, separador);
+			if (!campos) {
+				free(linea);
+				return false;
+			}
+			if (!creador(campos, extra)) {
+				free(linea);
+				free_strv(campos);
+				return false;
+			}
+			creador(campos, extra);
+			free_strv(campos);
+		}
+	}
+	
+	free(linea);
+	return true;
 }

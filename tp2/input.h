@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 /*
 Recibe la cantidad de argumentos validos a recibir y los recibidos efectivamente.
@@ -48,5 +49,13 @@ Retorna true si el elemento se corresponde con un operador valido, ademas se act
 En caso que el elemento no se corresponda con un operador valido se retorna false.
 */
 bool validar_operador(char* elem, int* op, int cant_operadores, char** operv);
+
+/*
+*/
+bool validar_cantidad_de_cadenas(char** cadenas, size_t n);
+
+/*
+*/
+bool csv_crear_estructura(FILE* archivo, char separador, bool creador(char**, void*), void* extra);
 
 #endif  // INPUT_H
