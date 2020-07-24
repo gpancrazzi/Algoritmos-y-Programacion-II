@@ -56,7 +56,7 @@ int comparar_enteros_wrapper(const void *a, const void *b) {
  * *****************************************************************/
 
 void prueba_turnos_crear(void) {
-	turnos_t* turnos1 = turnos_crear(strcmp_wrapper);
+	turnos_t* turnos1 = turnos_crear(strcmp_wrapper, NULL);
 	
 	print_test("Prueba turnos crear turnos vacio", turnos1);
 	print_test("Prueba turnos la cantidad de elementos es 0", turnos_cantidad(turnos1) == 0);
@@ -64,11 +64,11 @@ void prueba_turnos_crear(void) {
 	print_test("Prueba turnos esta vacio es true", turnos_esta_vacio(turnos1));
     print_test("Prueba turnos desencolar es NULL", !turnos_desencolar(turnos1));
 	
-	turnos_destruir(turnos1, NULL);
+	turnos_destruir(turnos1);
 }
 
 void prueba_turnos_encolar_desencolar(void) {
-	turnos_t* turnos1 = turnos_crear(strcmp_wrapper);
+	turnos_t* turnos1 = turnos_crear(strcmp_wrapper, NULL);
 	char* valor1[] = {"guau", "miau", "mu", "pio", "grr", "fiu"};
 	size_t n1 = 6;
     bool es_prioritario = true;
@@ -112,14 +112,14 @@ void prueba_turnos_encolar_desencolar(void) {
 	print_test("Prueba turnos esta vacio es true", turnos_esta_vacio(turnos1));
     print_test("Prueba turnos desencolar es NULL", !turnos_desencolar(turnos1));
 	
-	turnos_destruir(turnos1, NULL);
+	turnos_destruir(turnos1);
 }
 
 void prueba_turnos_volumen(void) {
 	size_t valores1[CONSTANTE_VOLUMEN];
 	size_t inicio_prioritario = 9000;
 	void* valores2[CONSTANTE_VOLUMEN];
-	turnos_t* turnos1 = turnos_crear(comparar_enteros_wrapper);
+	turnos_t* turnos1 = turnos_crear(comparar_enteros_wrapper, NULL);
 	bool ok = true, es_prioritario = true;
 	
 	for (size_t i = 0; i < CONSTANTE_VOLUMEN; i++) {
@@ -158,11 +158,11 @@ void prueba_turnos_volumen(void) {
 	print_test("Prueba turnos esta vacio es true", turnos_esta_vacio(turnos1));
     print_test("Prueba turnos desencolar es NULL", !turnos_desencolar(turnos1));
     
-    turnos_destruir(turnos1, NULL);
+    turnos_destruir(turnos1);
 }
 
 void prueba_turnos_destruir(void) {
-	turnos_t* turnos1 = turnos_crear(strcmp_wrapper);
+	turnos_t* turnos1 = turnos_crear(strcmp_wrapper, NULL);
 	char* valor1[] = {"guau", "miau", "mu", "pio", "grr", "fiu"};
 	size_t inicio1 = 3, fin1 = 6;
 	bool ok = true, es_prioritario = true;
@@ -170,10 +170,10 @@ void prueba_turnos_destruir(void) {
 	ok = encolar_varios_elementos(turnos1, (void**)valor1, 0, inicio1, !es_prioritario);
 	ok = encolar_varios_elementos(turnos1, (void**)valor1, inicio1, fin1, es_prioritario);
 	print_test("Prueba turnos encolar varios elementos de memoria estatica retorna true", ok);
-	turnos_destruir(turnos1, NULL);
+	turnos_destruir(turnos1);
 	print_test("Prueba turnos destruir con funcion NULL", true);
 	
-	turnos_t* turnos2 = turnos_crear(strcmp_wrapper);
+	turnos_t* turnos2 = turnos_crear(strcmp_wrapper, free);
 	size_t inicio2 = 2, fin2 = 3;
 	char** valor2 = malloc(sizeof(char*) * fin2);
 	char* dato1 = malloc(sizeof(char));
@@ -190,7 +190,7 @@ void prueba_turnos_destruir(void) {
 	ok = encolar_varios_elementos(turnos2, (void**)valor2, 0, inicio2, !es_prioritario);
 	ok = encolar_varios_elementos(turnos2, (void**)valor2, inicio2, fin2, es_prioritario);
 	print_test("Prueba turnos encolar varios elementos de memoria dinamica retorna true", ok);
-	turnos_destruir(turnos2, free);
+	turnos_destruir(turnos2);
 	free(valor2);
 	print_test("Prueba turnos destruir con funcion distinta de NULL", true);
 }

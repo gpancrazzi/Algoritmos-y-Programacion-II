@@ -1,41 +1,40 @@
-#define _POSIX_C_SOURCE 200809L //getline
+#define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "csv.h"
+#include "input.h"
 #define SEPARADOR ','
 
-static void eliminar_fin_linea(char* linea) {
-	size_t len = strlen(linea);
-	if (linea[len - 1] == '\n') {
-		linea[len - 1] = '\0';
-	}
-	if (linea[len - 2] == '\r') {
-		linea[len - 2] = '\0';
-	}
-}
-
-lista_t* csv_crear_estructura(const char* ruta_csv, void* (*creador) (char**, void*), void* extra) {
-	FILE* archivo = fopen(ruta_csv, "r");
-	if (!archivo) {
-		return NULL;
-	}
-	
-	lista_t* lista = lista_crear();
-	if (!lista) {
-		fclose(archivo);
-		return NULL;
-	}
-
+bool csv_crear_estructura(FILE* archivo, bool* (*creador) (char**, void*), void* extra) {
 	char* linea = NULL;
 	size_t c = 0;
-	while (getline(&linea, &c, archivo) > 0) {
-		eliminar_fin_linea(linea);
-		char** campos = split(linea, SEPARADOR);
-		lista_insertar_ultimo(lista, creador(campos, extra));
-		free_strv(campos);
+	
+	rewind(archivo);
+	ssize_t len = 0;
+	while (len != -1) {
+		len = getline(&linea, &c, archivo);
+		if (len != -1) {
+			eliminar_fin_linea(linea, len);
+			char** campos = split(linea, SEPARADOR);
+			if (!campos) {
+				free(linea);
+				fclose(archivo);
+				return false;
+			}
+			if (!creador(campos, extra)) {
+				free(linea);
+				free_strv(campos);
+				fclose(archivo);
+				return false;
+			}
+			creador(campos, extra);
+			free_strv(campos);
+		}
 	}
+	
 	free(linea);
 	fclose(archivo);
-	return lista;
+	return true;
 }

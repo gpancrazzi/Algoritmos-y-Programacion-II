@@ -10,13 +10,14 @@
 struct turnos {
 	lista_t* urgentes;
 	heap_t* regulares;
+	turnos_destruir_dato_t destruir_dato;
 };
 
 /* ******************************************************************
  *                        PRIMITIVAS DE TURNOS
  * *****************************************************************/
 
-turnos_t* turnos_crear(cmp_fun_t cmp) {
+turnos_t* turnos_crear(cmp_fun_t cmp, turnos_destruir_dato_t destruir_dato) {
 	turnos_t* turnos = malloc(sizeof(turnos_t));
 	
 	if (!turnos) {
@@ -36,12 +37,13 @@ turnos_t* turnos_crear(cmp_fun_t cmp) {
 		return NULL;
 	}
 	
+	turnos->destruir_dato = destruir_dato;
 	return turnos;
 }
 
-void turnos_destruir(turnos_t* turnos, void destruir_dato(void*)) {
-	lista_destruir(turnos->urgentes, destruir_dato);
-	heap_destruir(turnos->regulares, destruir_dato);
+void turnos_destruir(turnos_t* turnos) {
+	lista_destruir(turnos->urgentes, turnos->destruir_dato);
+	heap_destruir(turnos->regulares, turnos->destruir_dato);
 	free(turnos);
 }
 

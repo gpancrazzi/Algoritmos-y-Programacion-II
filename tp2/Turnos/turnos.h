@@ -22,21 +22,24 @@ mayor a 0  si  a > b
 */
 typedef int (*cmp_fun_t) (const void *a, const void *b);
 
+// tipo de funcion para destruir dato
+typedef void (*turnos_destruir_dato_t)(void *);
+
 //Tipo utilizado para TDA turnos.
 typedef struct turnos turnos_t;
 
 /*
-Crea un TDA turnos. Recibe como unico parametro la funcion de comparacion a
-utilizar. Devuelve un puntero a turnos, el cual debe ser destruido con turnos_destruir().
+Crea un TDA turnos. Recibe como parametro la funcion de comparacion y de destruccion a
+utilizar (el puntero a la funcion de destruccion puede ser NULL, en cuyo caso no se llamara). 
+Devuelve un puntero a turnos, el cual debe ser destruido con turnos_destruir().
 */
-turnos_t* turnos_crear(cmp_fun_t cmp);
+turnos_t* turnos_crear(cmp_fun_t cmp, turnos_destruir_dato_t destruir_dato);
 
 /*
-Elimina el TDA turnos, llamando a la funcion dada para cada elemento del mismo.
-El puntero a la funcion puede ser NULL, en cuyo caso no se llamara.
+Elimina el TDA turnos, llamando a la funcion dada para cada elemento del mismo, si es que corresponde.
 Post: se llama a la funcion indicada con cada elemento del TDA. El mismo deja de ser valido.
 */
-void turnos_destruir(turnos_t* turnos, void destruir_dato(void*));
+void turnos_destruir(turnos_t* turnos);
 
 /*
 Agrega un elemento al TDA turnos. El elemento no puede ser NULL.

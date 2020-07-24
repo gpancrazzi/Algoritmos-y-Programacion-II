@@ -93,6 +93,7 @@ void eliminar_fin_linea(char* linea, size_t len) {
 	if (linea[len - 1] == '\n') {
 		linea[len - 1] = '\0';
 	}
+	
 	if (linea[len - 2] == '\r') {
 		linea[len - 2] = '\0';
 	}
