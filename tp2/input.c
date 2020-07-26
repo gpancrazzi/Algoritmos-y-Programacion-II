@@ -139,7 +139,7 @@ bool validar_cantidad_de_cadenas(char** cadenas, size_t n) {
 	return i == n;
 }
 
-bool csv_crear_estructura(FILE* archivo, char separador, bool creador(char**, void*), void* extra) {
+bool csv_crear_estructura(FILE* archivo, bool creador(char**, void*), void* extra) {
 	char* linea = NULL;
 	size_t c = 0;
 	
@@ -149,7 +149,7 @@ bool csv_crear_estructura(FILE* archivo, char separador, bool creador(char**, vo
 		len = getline(&linea, &c, archivo);
 		if (len != -1) {
 			eliminar_fin_linea(linea, len);
-			char** campos = split(linea, separador);
+			char** campos = split(linea, ',');
 			if (!campos) {
 				free(linea);
 				return false;

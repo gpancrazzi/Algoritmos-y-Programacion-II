@@ -34,7 +34,7 @@ void swap(void** datos, size_t pos1, size_t pos2) {
 	datos[pos2] = dato_aux;
 }
 
-bool redimensionar(heap_t* heap, size_t capacidad) {
+bool redimensionar_heap(heap_t* heap, size_t capacidad) {
 	void** temp_datos = realloc(heap->datos, sizeof(void*) * capacidad);
 	
 	if (!temp_datos) {
@@ -180,7 +180,7 @@ bool heap_esta_vacio(const heap_t *heap) {
 
 bool heap_encolar(heap_t *heap, void *elem) {
 	if (heap->cantidad == heap->capacidad) {
-		if (!redimensionar(heap, heap->capacidad * CONSTANTE_REDIMENSION)) {
+		if (!redimensionar_heap(heap, heap->capacidad * CONSTANTE_REDIMENSION)) {
 			return false;
 		}
 	}
@@ -205,7 +205,7 @@ void *heap_desencolar(heap_t *heap) {
 	}
 	
 	if ((heap->cantidad <= (heap->capacidad / CANTIDAD_MINIMA_REDIMENSION)) && ((heap->capacidad / CONSTANTE_REDIMENSION) >= CAPACIDAD_INICIAL)) {
-		redimensionar(heap, heap->capacidad / CONSTANTE_REDIMENSION);
+		redimensionar_heap(heap, heap->capacidad / CONSTANTE_REDIMENSION);
 	}
 	
 	void* temp_dato = heap->datos[0];

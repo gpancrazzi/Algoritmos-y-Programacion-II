@@ -56,6 +56,6 @@ bool validar_cantidad_de_cadenas(char** cadenas, size_t n);
 
 /*
 */
-bool csv_crear_estructura(FILE* archivo, char separador, bool creador(char**, void*), void* extra);
+bool csv_crear_estructura(FILE* archivo, bool creador(char**, void*), void* extra);
 
 #endif  // INPUT_H

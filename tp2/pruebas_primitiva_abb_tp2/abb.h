@@ -58,12 +58,14 @@ size_t abb_cantidad(abb_t *arbol);
  */
 void abb_destruir(abb_t *arbol);
 
-/* Obtiene los valores de un rango ordenado de claves, en caso de que algun parametro del rango sea NULL, se asume que 
- * tal parametro coincide con la clave de menor o mayor valor segun corresponda.
+/* Obtiene los valores de un intervalo cerrado de claves, ordenado de manera creciente, 
+ * en caso de que algun parametro del rango sea el parametro "sin_rango" 
+ * (que indica que no se desea especificar tal parametro) o si la clave no exista en el arbol, 
+ * se asume que tal parametro coincide con la clave de menor o mayor valor segun corresponda.
  * Pre: La estructura abb fue inicializada.
- * Post: Se retorna una lista que posteriormente debe ser destruida con la funcion acorde. En caso de error, se retorna NULL.
+ * Post: Se retorna una lista que posteriormente debe ser destruida con la funcion acorde. En caso de error se retorna NULL.
 */
-lista_t* abb_obtener_rango(const abb_t* arbol, char* inicio, char* fin);
+lista_t* abb_obtener_rango(const abb_t* arbol, char* inicio, char* fin, char* sin_rango);
 
 /* Recorre cada elemento del abb, desde el primero hasta el ultimo o hasta el indicado por la funcion visitar  
  * y realiza las acciones que se especifiquen en dicha funcion. 

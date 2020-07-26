@@ -148,32 +148,14 @@ void* borrar_nodo_con_dos_hijos(abb_t* arbol, nodo_abb_t** ptr_nodo, nodo_abb_t*
 	return dato;
 }
 
-char* obtener_inicio(nodo_abb_t* nodo) {
-	if (!nodo->izq) {
-		return (char*)nodo->clave;
+char* obtener_parametro_rango(nodo_abb_t* nodo, bool es_inicio) {
+	if (es_inicio) {
+		if (!nodo->izq) return (char*)nodo->clave;
+		return obtener_parametro_rango(nodo->izq, es_inicio);
 	}
 	
-	return obtener_inicio(nodo->izq);
-}
-
-char* obtener_fin(nodo_abb_t* nodo) {
-	if (!nodo->der) {
-		return (char*)nodo->clave;
-	}
-	
-	return obtener_fin(nodo->der);
-}
-
-bool rango_valido(abb_t* arbol, char* inicio, char* fin) {
-	if (arbol->cmp(inicio, fin) > 0) {
-		return false;
-	}
-	
-	if ((!abb_pertenece(arbol, inicio)) || (!abb_pertenece(arbol, fin))) {
-		return false;
-	}
-	
-	return true;
+	if (!nodo->der) return (char*)nodo->clave;
+	return obtener_parametro_rango(nodo->der, es_inicio);
 }
 
 bool obtener_datos(nodo_abb_t* nodo, abb_comparar_clave_t cmp, lista_t* datos, char* inicio, char* fin) {
@@ -298,27 +280,16 @@ void abb_destruir(abb_t *arbol) {
 	free(arbol);
 }
 
-lista_t* abb_obtener_rango(const abb_t* arbol, char* inicio, char* fin) {
+lista_t* abb_obtener_rango(const abb_t* arbol, char* inicio, char* fin, char* sin_rango) {
 	abb_t* arbol_temp = (abb_t*)arbol;
+	bool es_inicio = true;
 	
-	if (arbol_temp->cantidad == 0) return NULL;
-	
-	bool se_modifica_rango = false;
-	if ((!inicio) && (!fin)) {
-		inicio = obtener_inicio(arbol->raiz);
-		fin = obtener_fin(arbol->raiz);
-		se_modifica_rango = true;
-	} else if (!inicio) {
-		inicio = obtener_inicio(arbol->raiz);
-	} else if (!fin) {
-		fin = obtener_fin(arbol->raiz);
-	}
-	
-	if ((!se_modifica_rango) && (!rango_valido(arbol_temp, inicio, fin))) return NULL;
-	
+	if (abb_cantidad(arbol_temp) == 0) return NULL;
+	if (arbol_temp->cmp(inicio, sin_rango) == 0) inicio = obtener_parametro_rango(arbol_temp->raiz, es_inicio);
+	if (arbol_temp->cmp(fin, sin_rango) == 0) fin = obtener_parametro_rango(arbol_temp->raiz, !es_inicio);
+	if (arbol_temp->cmp(inicio, fin) > 0) return NULL;
 	lista_t* datos = lista_crear();
 	if (!datos) return NULL;
-	
 	if (!obtener_datos(arbol_temp->raiz, arbol_temp->cmp, datos, inicio, fin)) {
 		lista_destruir(datos, NULL);
 		return NULL;

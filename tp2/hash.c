@@ -88,7 +88,7 @@ void guardar_campo (hash_t* hash, char* clave, void* dato, size_t pos) {
 	hash->cantidad++;
 }
 
-bool redimensionar(hash_t *hash, size_t capacidad) {
+bool redimensionar_hash(hash_t *hash, size_t capacidad) {
 	campos_t* temp_campos = malloc(sizeof(campos_t) * capacidad);
 	
 	if (!temp_campos) {
@@ -141,7 +141,7 @@ bool hash_guardar(hash_t *hash, const char *clave, void *dato) {
 	}
 	
 	if ((hash->cantidad + hash->borrados) == ((hash->capacidad * 70) / 100)){
-		if (!redimensionar(hash, hash->capacidad * CONSTANTE_DE_REDIMENSION)) {
+		if (!redimensionar_hash(hash, hash->capacidad * CONSTANTE_DE_REDIMENSION)) {
 			free(clave_aux);
 			return false;
 		}
@@ -169,7 +169,7 @@ void *hash_borrar(hash_t *hash, const char *clave) {
 		} else {
 			prox_capacidad = hash->capacidad / CONSTANTE_DE_REDIMENSION; 
 		}
-		redimensionar(hash, prox_capacidad);
+		redimensionar_hash(hash, prox_capacidad);
 	}
 	
 	size_t pos = buscar_posicion_clave(hash, clave);

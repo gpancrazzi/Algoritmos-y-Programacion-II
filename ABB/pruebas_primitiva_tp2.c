@@ -6,6 +6,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#define SIN_RANGO ""
+
 /* ******************************************************************
  *                        FUNCIONES AUXILIARES
  * *****************************************************************/
@@ -91,21 +93,21 @@ void prueba_abb_obtener_rangos(void) {
 		return;
 	}
 	
-	lista_t* datos1 = abb_obtener_rango(abb1, claves[4], claves[6]);
+	lista_t* datos1 = abb_obtener_rango(abb1, claves[4], claves[6], SIN_RANGO);
 	void* ptr1[] = {&num[4], &num[0], &num[6]};
 	size_t n1 = 3;
 	ok = verificar_orden(datos1, ptr1, n1) && lista_esta_vacia(datos1);
 	print_test("Prueba abb obtener_rango chico retorna el rango y orden correctos", ok);
 	lista_destruir(datos1, NULL);
 	
-	lista_t* datos2 = abb_obtener_rango(abb1, NULL, NULL);
+	lista_t* datos2 = abb_obtener_rango(abb1, SIN_RANGO, SIN_RANGO, SIN_RANGO);
 	ok = true;
 	void* ptr2[] = {&num[3], &num[1], &num[4], &num[0], &num[6], &num[2], &num[5]};
 	ok = verificar_orden(datos2, ptr2, n) && lista_esta_vacia(datos2);
 	print_test("Prueba abb obtener_rango completo retorna el rango y orden correctos", ok);
 	lista_destruir(datos2, NULL);
 	
-	lista_t* datos3 = abb_obtener_rango(abb1, NULL, claves[4]);
+	lista_t* datos3 = abb_obtener_rango(abb1, SIN_RANGO, claves[4], SIN_RANGO);
 	ok = true;
 	void* ptr3[] = {&num[3], &num[1], &num[4]};
 	size_t n3 = 3;
@@ -113,7 +115,7 @@ void prueba_abb_obtener_rangos(void) {
 	print_test("Prueba abb obtener_rango sin inicio definido retorna el rango y orden correctos", ok);
 	lista_destruir(datos3, NULL);
 	
-	lista_t* datos4 = abb_obtener_rango(abb1, claves[1], NULL);
+	lista_t* datos4 = abb_obtener_rango(abb1, claves[1], SIN_RANGO, SIN_RANGO);
 	ok = true;
 	void* ptr4[] = {&num[1], &num[4], &num[0], &num[6], &num[2], &num[5]};
 	size_t n4 = 6;
@@ -128,30 +130,48 @@ void prueba_abb_obtener_rango_casos_borde(void) {
 	abb_t* abb1 = abb_crear(strcmp, NULL);
 	char *claves[] = {"perro", "gato", "vaca", "elefante", "iguana", "zorro", "raton"};
 	int num[] = {4, 45, -1, 12, 3, 6, 2};
-	void* ptr[] = {&num[0], &num[1], &num[2], &num[3], &num[4], &num[5], &num[6]};
-	size_t n = 7;
-	bool ok = guardar_en_abb(abb1, claves, ptr, n);
+	void* ptr1[] = {&num[0], &num[1], &num[2], &num[3], &num[4], &num[5], &num[6]};
+	size_t n1 = 7;
+	bool ok = guardar_en_abb(abb1, claves, ptr1, n1);
 	
 	if (!ok) {
 		return;
 	}
 	
 	abb_t* abb2 = abb_crear(strcmp, NULL);
-	lista_t* datos1 = abb_obtener_rango(abb2, NULL, NULL);
+	lista_t* datos1 = abb_obtener_rango(abb2, SIN_RANGO, SIN_RANGO, SIN_RANGO);
 	print_test("Prueba abb obtener_rango en abb vacio retorna el valor correcto", !datos1);
 	abb_destruir(abb2);
 	
-	lista_t* datos2 = abb_obtener_rango(abb1, claves[2], "auto");
-	print_test("Prueba abb obtener_rango fin no se encuentra en el abb retorna el valor correcto", !datos2);
+	ok = true;
+	size_t n2 = 1;
+	lista_t* datos2 = abb_obtener_rango(abb1, claves[2], "zapallo", SIN_RANGO);
+	void* ptr2[] = {&num[2]};
+	ok = verificar_orden(datos2, ptr2, n2) && lista_esta_vacia(datos2);
+	print_test("Prueba abb obtener_rango fin no se encuentra en el abb retorna el valor correcto", ok);
+	lista_destruir(datos2, NULL);
 	
-	lista_t* datos3 = abb_obtener_rango(abb1, "pera", claves[2]);
-	print_test("Prueba abb obtener_rango inicio no se encuentra en el abb retorna el valor correcto", !datos3);
+	ok = true;
+	size_t n3 = 3;
+	lista_t* datos3 = abb_obtener_rango(abb1, "pera", claves[2], SIN_RANGO);
+	void* ptr3[] = {&num[0], &num[6], &num[2]};
+	ok = verificar_orden(datos3, ptr3, n3) && lista_esta_vacia(datos3);
+	print_test("Prueba abb obtener_rango inicio no se encuentra en el abb retorna el valor correcto", ok);
+	lista_destruir(datos3, NULL);
 	
-	lista_t* datos4 = abb_obtener_rango(abb1, "pera", "auto");
-	print_test("Prueba abb obtener_rango rango no se encuentra en el abb retorna el valor correcto", !datos4);
+	ok = true;
+	size_t n4 = 3;
+	lista_t* datos4 = abb_obtener_rango(abb1, "auto", "pera", SIN_RANGO);
+	void* ptr4[] = {&num[3], &num[1], &num[4]};
+	ok = verificar_orden(datos4, ptr4, n4) && lista_esta_vacia(datos4);
+	print_test("Prueba abb obtener_rango rango no se encuentra en el abb (el intervalo es cerrado) retorna el valor correcto", ok);
+	lista_destruir(datos4, NULL);
 	
-	lista_t* datos5 = abb_obtener_rango(abb1, claves[6], claves[1]);
-	print_test("Prueba abb obtener_rango rango incoherente retorna el valor correcto", !datos5);
+	lista_t* datos5 = abb_obtener_rango(abb1, claves[6], claves[1], SIN_RANGO);
+	print_test("Prueba abb obtener_rango rango incoherente (claves existen en el abb) retorna el valor correcto", !datos5);
+	
+	lista_t* datos6 = abb_obtener_rango(abb1, "pera", "auto", SIN_RANGO);
+	print_test("Prueba abb obtener_rango rango no se encuentra en el abb (el intervalo no es cerrado) retorna el valor correcto", !datos6);
 	
 	abb_destruir(abb1);
 }
@@ -181,7 +201,7 @@ void prueba_abb_obtener_rango_volumen(size_t n) {
 	abb_iter_t* iter1 = abb_iter_in_crear(abb);
 	obtener_rango(iter1, claves1, inicio1, fin1, n1);
 	obtener_valores(abb, claves1, valores1, n1);
-	lista_t* datos1 = abb_obtener_rango(abb, claves1[0], claves1[n1 - 1]);
+	lista_t* datos1 = abb_obtener_rango(abb, claves1[0], claves1[n1 - 1], SIN_RANGO);
 	ok = verificar_orden(datos1, valores1, n1) && lista_esta_vacia(datos1);
 	print_test("Prueba abb obtener_rango en volumen, con rango acotado, retorna el rango y orden correctos", ok);
 	abb_iter_in_destruir(iter1);
@@ -196,7 +216,7 @@ void prueba_abb_obtener_rango_volumen(size_t n) {
 	abb_iter_t* iter2 = abb_iter_in_crear(abb);
 	obtener_rango(iter2, claves2, inicio2, fin2, n2);
 	obtener_valores(abb, claves2, valores2, n2);
-	lista_t* datos2 = abb_obtener_rango(abb, claves2[0], claves2[n2 - 1]);
+	lista_t* datos2 = abb_obtener_rango(abb, claves2[0], claves2[n2 - 1], SIN_RANGO);
 	ok = verificar_orden(datos2, valores2, n2) && lista_esta_vacia(datos2);
 	print_test("Prueba abb obtener_rango en volumen, con todos los elementos, retorna el rango y orden correctos", ok);
 	abb_iter_in_destruir(iter2);
