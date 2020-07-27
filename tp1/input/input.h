@@ -51,10 +51,16 @@ En caso que el elemento no se corresponda con un operador valido se retorna fals
 bool validar_operador(char* elem, int* op, int cant_operadores, char** operv);
 
 /*
+Recibe un arreglo de cadenas de texto y la cantidad de cadenas esperadas en el arreglo.
+Retorna true si la cantidad coincide con la cantidad del arreglo. Retorna false en caso contrario. 
 */
 bool validar_cantidad_de_cadenas(char** cadenas, size_t n);
 
 /*
+Pre: el archivo se encuentra abierto y tiene formato csv.
+Recibe un archivo, lee linea por linea y, de acuerdo a la funcion que se pase como parametro,
+va ejecutando las acciones que correspondan.
+Retorna false o true segun lo indicado en la funcion creador.
 */
 bool csv_crear_estructura(FILE* archivo, bool creador(char**, void*), void* extra);
 

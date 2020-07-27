@@ -39,11 +39,11 @@ doctor_t* doctor_crear(char* nombre, char* especialidad) {
 	return doctor;
 }
 
-char* doctor_ver_nombre(doctor_t* doctor) {
+const char* doctor_ver_nombre(doctor_t* doctor) {
 	return doctor->nombre;
 }
 
-char* doctor_ver_especialidad(doctor_t* doctor) {
+const char* doctor_ver_especialidad(doctor_t* doctor) {
 	return doctor->especialidad;
 }
 

@@ -36,11 +36,11 @@ paciente_t* paciente_crear(char* nombre, char* anio_inscripcion) {
 	return paciente;
 }
 
-char* paciente_ver_nombre(paciente_t* paciente) {
+const char* paciente_ver_nombre(paciente_t* paciente) {
 	return paciente->nombre;
 }
 
-char* paciente_ver_anio(paciente_t* paciente) {
+const char* paciente_ver_anio(paciente_t* paciente) {
 	return paciente->anio_inscripcion;
 }
 

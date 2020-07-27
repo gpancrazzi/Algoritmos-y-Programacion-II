@@ -62,7 +62,7 @@ void procesar_pedir_turno(char** parametros, hash_t* pacientes, hash_t* especial
 	}
 	
 	paciente_t* paciente_auxiliar = hash_obtener(pacientes, parametros[0]);
-	paciente_t* paciente = paciente_crear(paciente_ver_nombre(paciente_auxiliar), paciente_ver_anio(paciente_auxiliar));
+	paciente_t* paciente = paciente_crear((char*)paciente_ver_nombre(paciente_auxiliar), (char*)paciente_ver_anio(paciente_auxiliar));
 	if (!paciente) return;
 	turnos_t* turnos = hash_obtener(especialidades, parametros[1]);
 	if (!turnos_encolar(turnos, paciente, es_urgente)) {
@@ -263,7 +263,7 @@ bool validar_archivos(char** argumentos, FILE** pacientes, FILE** doctores) {
 }
 
 /* ******************************************************************
- *            FUNCIONES PARA COMPARAR Y DESTRUIR
+ *       FUNCIONES ENMASCARADAS PARA COMPARAR Y DESTRUIR
  * *****************************************************************/
 
 int comparar_anio(paciente_t* a, paciente_t* b) {
@@ -289,9 +289,9 @@ void wrapper_doctor_destruir(void* elem) {
 	doctor_destruir(doctor);
 }
 
-/* ******************************************************************
- *   FUNCIONES PARA VALIDAR Y CREAR LAS ESTRUCTURAS DE DATOS
- * *****************************************************************/
+/* **************************************************************************
+ * FUNCIONES PARA VALIDAR Y CREAR LAS ESTRUCTURAS DE DATOS DE LOS PACIENTES
+ * *************************************************************************/
 
 typedef struct {
 	hash_t* paciente;
@@ -325,6 +325,10 @@ bool crear_estructura_pacientes(char** campos, void* estructura) {
 	
 	return true;
 }
+
+/* *************************************************************************
+ * FUNCIONES PARA VALIDAR Y CREAR LAS ESTRUCTURAS DE DATOS DE LOS DOCTORES
+ * ************************************************************************/
 
 typedef struct {
 	hash_t* especialidades;
