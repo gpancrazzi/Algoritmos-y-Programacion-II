@@ -174,7 +174,7 @@ void procesar_comando(const char* comando, char** parametros, hash_t* pacientes,
 		return;
 	}
 	
-	printf(ENOENT_CMD, comando);
+	fprintf(stdout, ENOENT_CMD, comando);
 }
 
 void procesar_entrada(hash_t* pacientes, hash_t* especialidades, abb_t* doctores) {
@@ -188,7 +188,7 @@ void procesar_entrada(hash_t* pacientes, hash_t* especialidades, abb_t* doctores
 			eliminar_fin_linea(linea, len);
 			char** campos = split(linea, SEPARADOR_COMANDO);
 			if (!campos[1]) {
-				printf(ENOENT_FORMATO, linea);
+				fprintf(stdout, ENOENT_FORMATO, linea);
 				free_strv(campos);
 				continue;
 			}
