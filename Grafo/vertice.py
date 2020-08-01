@@ -20,18 +20,23 @@ class Vertice(object):
         """Muestra los adyacentes del vertice"""
         return self.vecinos.keys()
     
-    def agregar_arista(self, vertice, peso=None):
+    def agregar_union(self, vertice, peso=None):
         """Agrega un adyacente al vertice"""
         self.vecinos[vertice] = peso
 
-    def eliminar_arista(self, vertice):
+    def eliminar_union(self, vertice):
         """Elimina un adyacente"""
         self.vecinos.pop(vertice)
 
-    def cantidad_aristas(self):
+    def cantidad_uniones(self):
         """"""
         return len(self.vecinos)
 
     def estan_conectados(self, vertice):
         """"""
         return vertice in self.vecinos
+
+    def iterador_vertice(self):
+        """"""
+        iterador = iter(self.vecinos)
+        return iterador
