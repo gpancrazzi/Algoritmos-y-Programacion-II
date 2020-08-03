@@ -1,7 +1,7 @@
 class Vertice(object):
     """Representa un vertice de un grafo: sus atributos son:
     nombre, peso y vertices vecinos."""
-    def _init_(self, nombre, peso=None):
+    def __init__(self, nombre, peso):
         """Crea un vertice
         nombre y peso son cadenas, peso es optativo"""
         self.nombre = nombre
@@ -38,5 +38,4 @@ class Vertice(object):
 
     def iterador_vertice(self):
         """"""
-        iterador = iter(self.vecinos)
-        return iterador
+        return iter(self.vecinos)
