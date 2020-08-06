@@ -79,12 +79,14 @@ class Grafo(object):
             return self.vertices.get(nombre)
         return None
 
-    def vertices_estan_unidos(self, nombre1, nombre2):
+    def vertices_estan_unidos(self, inicio, fin):
         """Indica si dos vertices se encuentran conectados.
         Pre: el grafo fue creado.
         Retorna true en caso que exista la arista o false en caso contrario."""
-        if self.pertenece_vertice(nombre1) and self.pertenece_vertice(nombre2):
-            return self.vertices.get(nombre1).estan_conectados(nombre2) or self.vertices.get(nombre2).estan_conectados(nombre1)
+        if self.pertenece_vertice(inicio) and self.pertenece_vertice(fin):
+            if self.es_dirigido:
+                return self.vertices.get(inicio).estan_conectados(fin)    
+            return self.vertices.get(inicio).estan_conectados(fin) and self.vertices.get(fin).estan_conectados(inicio)
         return False
 
     def obtener_todos_los_vertices(self):
