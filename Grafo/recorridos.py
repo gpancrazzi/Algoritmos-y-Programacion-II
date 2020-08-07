@@ -1,15 +1,8 @@
 import queue
 from grafo import Grafo
 
-def bfs(grafo, origen):
-    """Recorrido de un grafo en ancho.
-    Se recibe el grafo y un vertice de origen.
-    Retorna un diccionario con los padres de cada vertice y
-    un diccionario con el orden de cada vertice en relación al origen indicado."""
-    visitados = set()
-    padres = {}
-    orden = {}
-    cola = queue.Queue()
+def recorrido_bfs(grafo, origen, visitados, padres, orden, cola):
+    """"""
     visitados.add(origen)
     padres[origen] = None
     orden[origen] = 0
@@ -22,9 +15,24 @@ def bfs(grafo, origen):
                 padres[adyacente] = vertice
                 orden[adyacente] = orden[vertice] + 1
                 cola.put(adyacente)
+
+def bfs(grafo, origen):
+    """Recorrido de un grafo en ancho.
+    Se recibe el grafo y un vertice de origen.
+    Retorna un diccionario con los padres de cada vertice y
+    un diccionario con el orden de cada vertice en relación al origen indicado."""
+    visitados = set()
+    padres = {}
+    orden = {}
+    cola = queue.Queue()
+    recorrido_bfs(grafo, origen, visitados, padres, orden, cola)
+    for vertice in grafo.vertices:
+        if vertice not in visitados:
+            recorrido_bfs(grafo, vertice, visitados, padres, orden, cola)
     return padres, orden
 
 def recorrido_dfs(grafo, vertice, visitados, padres, orden):
+    """"""
     visitados.add(vertice)
     for adyacente in grafo.obtener_adyacentes(vertice):
         if adyacente not in visitados:
