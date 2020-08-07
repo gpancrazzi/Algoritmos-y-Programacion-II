@@ -23,3 +23,23 @@ def bfs(grafo, origen):
                 orden[adyacente] = orden[vertice] + 1
                 cola.put(adyacente)
     return padres, orden
+
+def recorrido_dfs(grafo, vertice, visitados, padres, orden):
+    visitados.add(vertice)
+    for adyacente in grafo.obtener_adyacentes(vertice):
+        if adyacente not in visitados:
+            padres[adyacente] = vertice
+            orden[adyacente] = orden[vertice] + 1
+            recorrido_dfs(grafo, adyacente, visitados, padres, orden)
+
+def dfs(grafo):
+    """"""
+    visitados = set()
+    padres = {}
+    orden = {}
+    for vertice in grafo.vertices:
+        if vertice not in visitados:
+            padre[vertice] = None
+            orden[vertice] = 0
+            recorrido_dfs(grafo, vertice, visitados, padres, orden)
+    return padres, orden
