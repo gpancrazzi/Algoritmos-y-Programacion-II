@@ -1,4 +1,5 @@
 from grafo import Grafo
+from pila import Pila
 import queue
 
 def obtener_grados_de_entrada(grafo, grados):
@@ -9,7 +10,7 @@ def obtener_grados_de_entrada(grafo, grados):
         for adyacente in grafo.obtener_adyacentes(vertice):
             grados[adyacente] += 1
 
-def orden_topologico(grafo):
+def orden_topologico_bfs(grafo):
     """"""
     grados = {}
     obtener_grados_de_entrada(grafo, grados)
@@ -28,3 +29,20 @@ def orden_topologico(grafo):
     if len(resultado) == grafo.cantidad_vertices():
         return resultado
     return None
+
+def orden_topologico_recursivo(grafo, vertice, pila, visitados):
+    """"""
+    visitados.add(vertice)
+    for adyacente in grafo.obtener_adyacentes(vertice):
+        if adyacente not in visitados:
+            orden_topologico_recursivo(grafo, vertice, pila, visitados)
+    pila.apilar(vertice)
+
+def orden_topologico_dfs(grafo):
+    """"""
+    visitados = set()
+    pila = Pila()
+    for vertice in grafo.vertices:
+        if vertice not in visitados:
+            orden_topologico_recursivo(grafo, vertice, pila, visitados)
+    return pila
