@@ -4,7 +4,7 @@ from testing import print_test
 
 def prueba_bfs():
     grafo1 = Grafo(True)
-    vertices = ['A', 'B', 'C', 'D', 'E', 'F']
+    vertices = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
     for v in vertices:
         grafo1.agregar_vertice(v)
     grafo1.agregar_arista(vertices[0], vertices[1])
@@ -22,6 +22,9 @@ def prueba_bfs():
     
     print_test("Prueba BFS el padre del vertice 'B' es el correcto", padres[vertices[1]] == vertices[0])
     print_test("Prueba BFS el orden del vertice 'B' es el correcto", orden[vertices[1]] == 1)
+
+    print_test("Prueba BFS el padre del vertice sin aristas es el correcto", not padres[vertices[6]])
+    print_test("Prueba BFS el orden del vertice sin aristas es el correcto", orden[vertices[6]] == 0)
 
 print("~~~ PRUEBAS BFS ~~~")
 prueba_bfs()
