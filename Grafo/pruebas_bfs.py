@@ -18,6 +18,10 @@ def prueba_bfs():
     padres = recorrido[0]
     orden = recorrido[1]
     print_test("Prueba BFS el padre del origen es None", not padres[vertices[0]])
+    print_test("Prueba BFS el orden del origen es 0", orden[vertices[0]] == 0)
+    
+    print_test("Prueba BFS el padre del vertice 'B' es el correcto", padres[vertices[1]] == vertices[0])
+    print_test("Prueba BFS el orden del vertice 'B' es el correcto", orden[vertices[1]] == 1)
 
 print("~~~ PRUEBAS BFS ~~~")
 prueba_bfs()

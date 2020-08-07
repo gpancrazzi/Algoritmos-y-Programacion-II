@@ -2,6 +2,10 @@ import queue
 from grafo import Grafo
 
 def bfs(grafo, origen):
+    """Recorrido de un grafo en ancho.
+    Se recibe el grafo y un vertice de origen.
+    Retorna un diccionario con los padres de cada vertice y
+    un diccionario con el orden de cada vertice en relación al origen indicado."""
     visitados = set()
     padres = {}
     orden = {}
