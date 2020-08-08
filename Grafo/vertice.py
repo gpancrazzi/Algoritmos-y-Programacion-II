@@ -33,7 +33,7 @@ class Vertice(object):
         Elimina un adyacente"""
         self.vecinos.pop(vertice)
 
-    def ver_dato_union(self, vertice):
+    def ver_peso_union(self, vertice):
         """Pre: el vertice y la arista existen.
         Muestra el dato de la unión de los vertices.
         """

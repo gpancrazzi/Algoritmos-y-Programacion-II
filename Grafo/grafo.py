@@ -100,13 +100,13 @@ class Grafo(object):
         vertice = self.vertices.get(nombre)
         return vertice.ver_vecinos()
 
-    def ver_dato_arista(self, inicio, fin):
+    def ver_peso_arista(self, inicio, fin):
         """Pre: el grafo existe.
-        Se retorna el dato en el caso que la arista exista, None en el caso contrario."""
+        Se retorna el peso en el caso que la arista exista, None en el caso contrario."""
         vertice1 = self.vertices.get(inicio)
         vertice2 = self.vertices.get(fin)
         if self.vertices_estan_unidos(inicio, fin):
-            return vertice1.ver_dato_union(fin)    
+            return vertice1.ver_peso_union(fin)    
         return None
 
     def cantidad_vertices(self):
