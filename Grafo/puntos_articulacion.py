@@ -1,5 +1,7 @@
 from grafo import Grafo
 
+#recordar inicializar mas_bajo con el diccionario de orden obtenido con el recorrido dfs o bfs
+
 def minimo(orden1, orden2):
     """"""
     if orden1 <= orden2:
