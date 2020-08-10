@@ -4,7 +4,8 @@ import queue
 #grafo pesado con pesos positivos: usar dijkstra
 #grafo pesado, dirigido, con pesos negarivos: usar bellman-ford
 #grafo no pesado: usar un recorrido bfs
-#Orden O(e log(v)) siendo e la cantidad de aristas y v la cantidad de vertices.
+#Orden de dijkstra O(e log(v)) siendo e la cantidad de aristas y v la cantidad de vertices.
+#Orden de bellman-ford O(e * v) siendo e la cantidad de aristas y v la cantidad de vertices.
 
 def dijkstra(grafo, origen):
     """"""
