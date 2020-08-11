@@ -1,4 +1,5 @@
 from vertice import Vertice
+from random import randint
 
 class Grafo(object):
     def __init__(self, dirigido):
@@ -136,3 +137,18 @@ class Grafo(object):
         """Pre: el grafo existe.
         Retorna la cantidad de aristas que hay en el grafo."""
         return self.cantidad_aristas
+
+    def vertice_aleatorio(self):
+        """Pre: el grafo existe.
+        Retorna un vertice al azar, None en caso que el grafo este vacio."""
+        if self.self.cantidad_vertices() == 0: return None
+        vertices = self.obtener_todos_los_vertices()
+        i = randint(0,self.cantidad_vertices() - 1)
+        return vertices[i]
+
+    def ver_dato_vertice(self, nombre):
+        """Pre: el grafo existe.
+        Retorna el dato del vertice."""
+        if not nombre in self.vertices: return None
+        vertice = self.vertices.get(nombre)
+        return vertice.ver_dato()
