@@ -22,6 +22,7 @@ class Grafo(object):
         """Pre: el grafo fue creado.
         Retorna true si se creo la arista y false en caso contrario.
         Pos: se agrega una arista al grafo."""
+        if inicio == fin: return False
         vertice1 = self.vertices.get(inicio)
         vertice2 = self.vertices.get(fin)
         if not self.vertices_estan_unidos(inicio, fin):
@@ -116,9 +117,9 @@ class Grafo(object):
             vertice = self.vertices.get(nombre)
             for adyacente in vertice.iterador_vertice():
                 arista = []
-                arista[0] = nombre
-                arista[1] = adyacente
-                arista[2] = vertice.ver_peso_union(adyacente)
+                arista.append(nombre)
+                arista.append(adyacente)
+                arista.append(vertice.ver_peso_union(adyacente))
                 aristas.append(arista)
         return aristas
 
@@ -143,7 +144,7 @@ class Grafo(object):
         Retorna un vertice al azar, None en caso que el grafo este vacio."""
         if self.self.cantidad_vertices() == 0: return None
         vertices = self.obtener_todos_los_vertices()
-        i = randint(0,self.cantidad_vertices() - 1)
+        i = randint(0, self.cantidad_vertices() - 1)
         return vertices[i]
 
     def ver_dato_vertice(self, nombre):
