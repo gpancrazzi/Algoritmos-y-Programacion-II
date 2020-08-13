@@ -23,6 +23,7 @@ class Grafo(object):
         Retorna true si se creo la arista y false en caso contrario.
         Pos: se agrega una arista al grafo."""
         if inicio == fin: return False
+        if not self.pertenece_vertice(inicio) or not self.pertenece_vertice(fin): return False
         vertice1 = self.vertices.get(inicio)
         vertice2 = self.vertices.get(fin)
         if not self.vertices_estan_unidos(inicio, fin):
