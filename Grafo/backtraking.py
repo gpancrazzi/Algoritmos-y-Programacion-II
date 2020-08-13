@@ -12,3 +12,7 @@ def dfs_ciclo_largo_n(grafo, v, origen, n, visitados, camino_actual):
         if solucion: return solucion
     visitados.remove(v)
     return None
+
+def ciclo_largo_n(grafo, origen, n):
+    """"""
+    return dfs_ciclo_largo_n(grafo, origen, origen, n, set(), [origen])
