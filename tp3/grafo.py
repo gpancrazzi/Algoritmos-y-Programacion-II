@@ -143,7 +143,7 @@ class Grafo(object):
     def vertice_aleatorio(self):
         """Pre: el grafo existe.
         Retorna un vertice al azar, None en caso que el grafo este vacio."""
-        if self.self.cantidad_vertices() == 0: return None
+        if self.cantidad_vertices() == 0: return None
         vertices = self.obtener_todos_los_vertices()
         i = randint(0, self.cantidad_vertices() - 1)
         return vertices[i]
@@ -154,3 +154,9 @@ class Grafo(object):
         if not nombre in self.vertices: return None
         vertice = self.vertices.get(nombre)
         return vertice.ver_dato()
+
+    def actualizar_dato(self, nombre, dato=None):
+        """"""
+        if self.pertenece_vertice(nombre):
+            vertice = self.vertices.get(nombre)
+            vertice.cambiar_dato(dato)
