@@ -18,6 +18,7 @@ def construir_grafo(archivo):
             grafo.agregar_vertice(link1)
             if grafo.pertenece_vertice(articulo): grafo.actualizar_dato(articulo, link1)
             else: grafo.agregar_vertice(articulo, link1)
+            grafo.agregar_arista(articulo, link1)
         for link in titulos:
             grafo.agregar_vertice(link)
             grafo.agregar_arista(articulo, link)
