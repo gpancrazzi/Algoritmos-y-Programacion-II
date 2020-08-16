@@ -30,23 +30,26 @@ def camino_minimo_bfs(grafo, origen, fin=None):
             camino_bfs(grafo, vertice, visitados, padres, orden, cola)
     return padres, orden
 
+def recorrido_bfs(grafo, origen, visitados, orden, cola):
+    visitados.add(origen)
+    orden[origen] = 0
+    cola.put(origen)
+    while not cola.empty():
+        v = cola.get()
+        for w in grafo.obtener_adyacentes(v):
+            if w not in visitados:
+                visitados.add(w)
+                orden[w] = orden[v] + 1
+                cola.put(w)
+
 def vertices_rango_n(grafo, origen, n):
     """"""
-    en_rango = set()
+    visitados = set()
     orden = {}
-    pila = Pila()
-    orden[origen] = 0
-    pila.apilar(origen)
-    while not pila.esta_vacia():
-        v = pila.desapilar()
-        if orden.get(v) == n:
-            en_rango.add(v)
-            continue
-        for w in grafo.obtener_adyacentes(v):
-            if w in orden and orden.get(w) == 0: continue
-            orden[w] = orden[v] + 1
-            pila.apilar(w)
-    return len(en_rango)
+    cola = queue.Queue()
+    recorrido_bfs(grafo, origen, visitados, orden, cola)
+    en_rango = list(orden.values())
+    return en_rango.count(n)
 
 def dfs_ciclo_largo_n(grafo, v, origen, n, visitados, camino_actual):
     visitados.add(v)
