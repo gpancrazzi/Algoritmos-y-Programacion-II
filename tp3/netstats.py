@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from grafo import Grafo
-from biblioteca import camino_minimo_bfs, vertices_rango_n, ciclo_largo_n
+from biblioteca import camino_minimo_bfs, vertices_rango_n, ciclo_largo_n, diametro_grafo
 import sys
 import constantes
 
@@ -91,6 +91,17 @@ def ciclo_n_articulos(grafo, parametros):
     recorrido = constantes.FLECHA.join(ciclo)
     print(recorrido)
 
+def calcular_diametro(grafo):
+    """"""
+    (padres, origen, destino, orden) = diametro_grafo(grafo)
+    diametro = reconstruir_camino(padres, origen, destino)
+    print(diametro)
+    print(constantes.COSTO_CAMINO %orden)
+
+def calcular_conectividad(grafo, parametros):
+    """"""
+    
+
 def limpiar_parametros(linea):
     """"""
     parametros = linea.split(',')
@@ -122,6 +133,8 @@ def procesar_entrada(grafo):
         elif comando == constantes.RANGO: todos_en_rango(grafo, parametros)
         elif comando == constantes.NAVEGACION: navegacion_primer_link(grafo, parametros)
         elif comando == constantes.CICLO: ciclo_n_articulos(grafo, parametros)
+        elif comando == constantes.DIAMETRO: calcular_diametro(grafo)
+        elif comando == constantes.CONECTADOS: calcular_conectividad(grafo, parametros)
 
 #abrir el archivo pasado por terminal.
 archivo = open(sys.argv[1], 'r')
