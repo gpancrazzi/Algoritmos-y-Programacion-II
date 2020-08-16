@@ -47,7 +47,7 @@ def dfs(grafo):
     orden = {}
     for vertice in grafo.vertices:
         if vertice not in visitados:
-            padre[vertice] = None
+            padres[vertice] = None
             orden[vertice] = 0
             recorrido_dfs(grafo, vertice, visitados, padres, orden)
     return padres, orden
