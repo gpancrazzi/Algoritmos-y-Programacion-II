@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from grafo import Grafo
-from biblioteca import camino_minimo_bfs
+from biblioteca import camino_minimo_bfs, vertices_rango_n, ciclo_largo_n
 import sys
 import constantes
 
@@ -12,7 +12,12 @@ def construir_grafo(archivo):
         linea_limpia = linea.strip()
         titulos = linea_limpia.split('\t')
         articulo = titulos.pop(0)
-        grafo.agregar_vertice(articulo)
+        link1 = None
+        if titulos:
+            link1 = titulos.pop(0)
+            grafo.agregar_vertice(link1)
+            if grafo.pertenece_vertice(articulo): grafo.actualizar_dato(articulo, link1)
+            else: grafo.agregar_vertice(articulo, link1)
         for link in titulos:
             grafo.agregar_vertice(link)
             grafo.agregar_arista(articulo, link)
@@ -41,7 +46,8 @@ def camino_mas_corto(grafo, parametros):
     """"""
     origen = parametros.pop(0)
     destino = parametros.pop(0)
-    if not grafo.pertenece_vertice(origen) or not grafo.pertenece_vertice(destino): 
+    if ((not grafo.pertenece_vertice(origen)) or 
+    (not grafo.pertenece_vertice(destino))): 
         print(constantes.SIN_CAMINO)
         return 
     (padres, orden) = camino_minimo_bfs(grafo, origen, destino)
@@ -51,6 +57,38 @@ def camino_mas_corto(grafo, parametros):
     camino = reconstruir_camino(padres, origen, destino)
     print(camino)
     print(constantes.COSTO_CAMINO %orden[destino])
+
+def todos_en_rango(grafo, parametros):
+    """"""
+    origen = parametros.pop(0)
+    n = int(parametros.pop(0))
+    en_rango = vertices_rango_n(grafo, origen, n)
+    print(en_rango)
+
+def navegacion_primer_link(grafo, parametros):
+    """"""
+    v = parametros.pop(0)
+    camino = []
+    camino.append(v)
+    while v:
+        if len(camino) == 21: break
+        v = grafo.ver_dato_vertice(v)
+        if not v: break
+        camino.append(v)
+    recorrido = constantes.FLECHA.join(camino)
+    print(recorrido)
+
+def ciclo_n_articulos(grafo, parametros):
+    """"""
+    origen = parametros.pop(0)
+    n = int(parametros.pop(0))
+    ciclo = ciclo_largo_n(grafo, origen, n)
+    if not ciclo:
+        print(constantes.SIN_CAMINO)
+        return
+    ciclo.append(origen)
+    recorrido = constantes.FLECHA.join(ciclo)
+    print(recorrido)
 
 def limpiar_parametros(linea):
     """"""
@@ -80,7 +118,9 @@ def procesar_entrada(grafo):
         (comando, parametros) = identificar_comando(linea)
         if comando == constantes.LISTAR_OPERACIONES: listar_operaciones()
         elif comando == constantes.CAMINO: camino_mas_corto(grafo, parametros)
-        elif comando == constantes.RANGO: todos_en_rango(parametros)
+        elif comando == constantes.RANGO: todos_en_rango(grafo, parametros)
+        elif comando == constantes.NAVEGACION: navegacion_primer_link(grafo, parametros)
+        elif comando == constantes.CICLO: ciclo_n_articulos(grafo, parametros)
 
 #abrir el archivo pasado por terminal.
 archivo = open(sys.argv[1], 'r')
