@@ -48,6 +48,10 @@ class Vertice(object):
         Retorna true si existe una arista entre ambos vertices y false en caso contrario."""
         return vertice in self.vecinos
 
+    def cambiar_dato(self, dato):
+        """"""
+        self.dato = dato
+
     def iterador_vertice(self):
         """Pre: el vertice existe.
         Retorna un iterador para recorrer los adyacentes al vertice."""
