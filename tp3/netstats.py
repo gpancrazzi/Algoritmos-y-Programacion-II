@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from grafo import Grafo
-from biblioteca import camino_minimo_bfs, vertices_rango_n, ciclo_largo_n, diametro_grafo
+from biblioteca import camino_minimo_bfs, vertices_rango_n, ciclo_largo_n, diametro_grafo, componente_fuertemente_conexa
 import sys
 import constantes
 
@@ -16,9 +16,9 @@ def construir_grafo(archivo):
         if titulos:
             link1 = titulos.pop(0)
             grafo.agregar_vertice(link1)
-            if grafo.pertenece_vertice(articulo): grafo.actualizar_dato(articulo, link1)
-            else: grafo.agregar_vertice(articulo, link1)
-            grafo.agregar_arista(articulo, link1)
+        if grafo.pertenece_vertice(articulo): grafo.actualizar_dato(articulo, link1)
+        else: grafo.agregar_vertice(articulo, link1)
+        if link1: grafo.agregar_arista(articulo, link1)
         for link in titulos:
             grafo.agregar_vertice(link)
             grafo.agregar_arista(articulo, link)
@@ -100,7 +100,9 @@ def calcular_diametro(grafo):
 
 def calcular_conectividad(grafo, parametros):
     """"""
-    
+    origen = parametros.pop(0)
+    componente = componente_fuertemente_conexa(grafo, origen)
+    print(componente)
 
 def limpiar_parametros(linea):
     """"""
@@ -124,6 +126,7 @@ def identificar_comando(linea):
 def procesar_entrada(grafo):
     """"""
     comando = constantes.LISTAR_OPERACIONES
+    #cfc = {}
     while comando:
         try: linea = input()
         except EOFError: break
@@ -136,18 +139,8 @@ def procesar_entrada(grafo):
         elif comando == constantes.DIAMETRO: calcular_diametro(grafo)
         elif comando == constantes.CONECTADOS: calcular_conectividad(grafo, parametros)
 
-#abrir el archivo pasado por terminal.
 archivo = open(sys.argv[1], 'r')
-#leer cada linea.
-#limpiar la linea de caracteres de espacio o salto de linea.
-#separar en cadenas con split (por tabulador o espacio).
-#agregar en el grafo cada vertice y cada arista.
 red = construir_grafo(archivo)
 print("OK")
-#cerrar el archivo.
 archivo.close()
-#listar los comandos a llamar.
 procesar_entrada(red)
-#esperar la entrada de comandos.
-#procesar los comandos.
-#finalizar.

@@ -1,5 +1,6 @@
 import queue
 from grafo import Grafo
+from pila import Pila
 
 def camino_bfs(grafo, origen, fin, visitados, padres, orden, cola):
     visitados.add(origen)
@@ -16,6 +17,17 @@ def camino_bfs(grafo, origen, fin, visitados, padres, orden, cola):
                 if fin and w == fin: break
                 cola.put(w)
 
+def bfs_completo(grafo, origen):
+    visitados = set()
+    padres = {}
+    orden = {}
+    cola = queue.Queue()
+    camino_bfs(grafo, origen, None, visitados, padres, orden, cola)
+    for v in grafo.obtener_todos_los_vertices():
+        if v not in visitados:
+            camino_bfs(grafo, v, None, visitados, padres, orden, cola)
+    return padres, orden
+
 def camino_minimo_bfs(grafo, origen, fin=None):
     """"""
     visitados = set()
@@ -25,7 +37,7 @@ def camino_minimo_bfs(grafo, origen, fin=None):
     camino_bfs(grafo, origen, fin, visitados, padres, orden, cola)
     return padres, orden
 
-def recorrido_bfs(grafo, origen, n, visitados, orden, cola):
+def rango_bfs(grafo, origen, n, visitados, orden, cola):
     visitados.add(origen)
     orden[origen] = 0
     cola.put(origen)
@@ -43,7 +55,7 @@ def vertices_rango_n(grafo, origen, n):
     visitados = set()
     orden = {}
     cola = queue.Queue()
-    recorrido_bfs(grafo, origen, n, visitados, orden, cola)
+    rango_bfs(grafo, origen, n, visitados, orden, cola)
     en_rango = list(orden.values())
     return en_rango.count(n)
 
@@ -92,3 +104,46 @@ def diametro_grafo(grafo):
             orden_max = orden
             padres_max = padres.copy()
     return padres_max, origen_max, destino_max, orden_max
+
+def minimo(orden1, orden2):
+    if orden1 <= orden2:
+        return orden1
+    return orden2
+
+def algoritmo_tarjan(grafo, v, visitados, pila, apilados, orden, mas_bajo, cfc):
+    visitados.add(v)
+    pila.apilar(v)
+    apilados.add(v)
+    mas_bajo[v] = orden[v]
+    for w in grafo.obtener_adyacentes(v):
+        if w not in visitados:
+            orden[w] = orden[v] + 1
+            algoritmo_tarjan(grafo, w, visitados, pila, apilados, orden, mas_bajo, cfc)
+            mas_bajo[v] = minimo(mas_bajo[v], mas_bajo[w])
+        elif w in apilados:
+            mas_bajo[v] = minimo(mas_bajo[v], mas_bajo[w])
+    if mas_bajo[v] == orden[v]:
+        nueva_cfc = []
+        w = pila.desapilar()
+        apilados.remove(w)
+        nueva_cfc.append(w)
+        while w != v:
+            w = pila.desapilar()
+            apilados.remove(w)
+            nueva_cfc.append(w)
+        cfc.append(nueva_cfc)
+
+def componente_fuertemente_conexa(grafo, origen):
+    """"""
+    visitados = set()
+    pila = Pila()
+    apilados = set()
+    mas_bajo = {}
+    cfc = []
+    (padres, orden) = bfs_completo(grafo, origen)
+    algoritmo_tarjan(grafo, origen, visitados, pila, apilados, orden, mas_bajo, cfc)
+    mas_bajo.clear()
+    apilados.clear()
+    for v in grafo.obtener_todos_los_vertices(): 
+        if v not in visitados: algoritmo_tarjan(grafo, v, visitados, pila, apilados, orden, mas_bajo, cfc)
+    return cfc
