@@ -1,7 +1,7 @@
 class Vertice(object):
     """Representa un vertice de un grafo: sus atributos son:
     nombre, dato y vertices vecinos."""
-    def __init__(self, nombre, dato):
+    def __init__(self, nombre, dato=None):
         """Crea un vertice
         nombre y peso son cadenas, peso es optativo"""
         self.nombre = nombre
@@ -49,7 +49,8 @@ class Vertice(object):
         return vertice in self.vecinos
 
     def cambiar_dato(self, dato):
-        """"""
+        """Pre: el vertice existe.
+        Modifica el dato del vertice."""
         self.dato = dato
 
     def iterador_vertice(self):

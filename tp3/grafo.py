@@ -1,10 +1,11 @@
 from vertice import Vertice
-from random import randint
+import random
 
 class Grafo(object):
-    def __init__(self, dirigido):
+    def __init__(self, dirigido=False):
         """Se crea el Grafo, es necesario
         indicar true si el mismo es dirigido y false en el caso contrario.
+        Se asume que no es dirigido en caso de no indicar.
         Post: el grafo esta creado."""
         self.es_dirigido = dirigido
         self.vertices = {}
@@ -22,20 +23,17 @@ class Grafo(object):
         """Pre: el grafo fue creado.
         Retorna true si se creo la arista y false en caso contrario.
         Pos: se agrega una arista al grafo."""
-        if inicio == fin: return False
         if not self.pertenece_vertice(inicio) or not self.pertenece_vertice(fin): return False
         vertice1 = self.vertices.get(inicio)
         vertice2 = self.vertices.get(fin)
-        if not self.vertices_estan_unidos(inicio, fin):
-            if self.es_dirigido:
-                vertice1.agregar_union(fin, peso)
-                self.cantidad_aristas += 1
-                return True
+        if self.es_dirigido:
             vertice1.agregar_union(fin, peso)
-            vertice2.agregar_union(inicio, peso)
             self.cantidad_aristas += 1
             return True
-        return False
+        vertice1.agregar_union(fin, peso)
+        vertice2.agregar_union(inicio, peso)
+        self.cantidad_aristas += 1
+        return True
 
     def eliminar_arista(self, inicio, fin):
         """Pre: el grafo fue creado.
@@ -127,6 +125,7 @@ class Grafo(object):
     def obtener_adyacentes(self, nombre):
         """Pre: el grafo existe
         Retorna los adyacentes a un vertice."""
+        if not nombre in self.vertices: return None
         vertice = self.vertices.get(nombre)
         return vertice.ver_vecinos()
 
@@ -144,9 +143,7 @@ class Grafo(object):
         """Pre: el grafo existe.
         Retorna un vertice al azar, None en caso que el grafo este vacio."""
         if self.cantidad_vertices() == 0: return None
-        vertices = self.obtener_todos_los_vertices()
-        i = randint(0, self.cantidad_vertices() - 1)
-        return vertices[i]
+        return random.choice(list(self.vertices.keys()))
 
     def ver_dato_vertice(self, nombre):
         """Pre: el grafo existe.
@@ -156,7 +153,8 @@ class Grafo(object):
         return vertice.ver_dato()
 
     def actualizar_dato(self, nombre, dato=None):
-        """"""
+        """Pre: el grafo existe.
+        Actualiza el dato asociado al vertice."""
         if self.pertenece_vertice(nombre):
             vertice = self.vertices.get(nombre)
             vertice.cambiar_dato(dato)
