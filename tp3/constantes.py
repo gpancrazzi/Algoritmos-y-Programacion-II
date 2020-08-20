@@ -1,3 +1,4 @@
+#constantes a utilizar por el programa netstats.
 LISTAR_OPERACIONES = "listar_operaciones"
 CAMINO = "camino"
 MAS_IMPORTANTES = "mas_importantes"
@@ -12,3 +13,6 @@ CLUSTERING = "clustering"
 FLECHA = " -> "
 SIN_CAMINO = "No se encontro recorrido"
 COSTO_CAMINO = "Costo: %d"
+COMA = ", "
+SIN_LECTURA = "No existe forma de leer las paginas en orden"
+COEFICIENTE_CLUSTERING = "%.3f"
