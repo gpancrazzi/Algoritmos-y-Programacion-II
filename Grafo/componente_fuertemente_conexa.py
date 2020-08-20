@@ -1,8 +1,6 @@
 from grafo import Grafo
 from pila import Pila
 
-#recordar inicializar mas_bajo con el diccionario de orden obtenido con el recorrido dfs o bfs
-
 def minimo(orden1, orden2):
     """"""
     if orden1 <= orden2:
@@ -25,8 +23,10 @@ def componente_fuertemente_conexa(grafo, vertice, visitados, pila, apilados, ord
     if mas_bajo[vertice] == orden[vertice]:
         nueva_cfc = []
         componente = pila.desapilar()
+        apilados.remove(componente)
+        nueva_cfc.append(componente)
         while componente != vertice:
-            apilados.remove()
-            nueva_cfc.append(componente)
             componente = pila.desapilar()
+            apilados.remove(componente)
+            nueva_cfc.append(componente)
         componentes.append(nueva_cfc)
