@@ -191,10 +191,22 @@ def lectura_2_am(grafo, camino):
     dfs_ciclo_largo_n(grafo, camino[0], visitados, orden)
     return camino"""
 
-"""def diametro_grafo(grafo):
-    """"""
-    orden_max = None
+def diametro_grafo(grafo):
+    """Permite calcular el camino mínimo más grande del grafo para grafos no pesados.
+    Retorna el vertice de origen, de fin y el numero total de vertices en el diametro."""
+    orden_max = 0
     origen_max = None
     destino_max = None
+    caminos = {}
     for v in grafo.obtener_todos_los_vertices():
-        (padres, ordenes) = camino_minimo_bfs(grafo, v)"""
+        (padres, ordenes) = camino_minimo_bfs(grafo, v)
+        caminos[v] = ordenes
+    for v in caminos:
+        camino = caminos.get(v)
+        for w in camino:
+            distancia = camino.get(w)
+            if distancia > orden_max:
+                orden_max = distancia
+                origen_max = v
+                destino_max = w
+    return origen_max, destino_max, orden_max

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from grafo import Grafo
 from biblioteca import camino_minimo_bfs, vertices_rango_n, ciclo_largo_n
-from biblioteca import componente_fuertemente_conexa, clustering
+from biblioteca import componente_fuertemente_conexa, clustering, diametro_grafo
 import sys
 import constantes
 sys.setrecursionlimit(999999999)
@@ -56,7 +56,8 @@ def obtener_componente(v, cfc, num_cfc):
 ###############################################################################
 
 def listar_operaciones():
-    operaciones = ["camino", "conectados", "ciclo", "rango", "navegacion", "clustering"]
+    operaciones = ["camino", "conectados", "ciclo", "rango", "navegacion", "clustering",
+    "diametro"]
     for operacion in operaciones:
         print(operacion)
 
@@ -108,14 +109,13 @@ def ciclo_n_articulos(grafo, parametros):
     recorrido = constantes.FLECHA.join(ciclo)
     print(recorrido)
 
-"""def calcular_diametro(grafo):
-    """"""
+def calcular_diametro(grafo):
     (origen, destino, orden) = diametro_grafo(grafo)
-    (padres, ordenes) = camino_minimo_bfs(origen, destino)
+    (padres, ordenes) = camino_minimo_bfs(grafo, origen, destino)
     diametro = reconstruir_camino(padres, origen, destino)
     print(diametro)
     print(constantes.COSTO_CAMINO %orden)
-    return diametro, orden"""
+    return diametro, orden
 
 def calcular_conectividad(grafo, parametros, cfc, num_cfc):
     v = parametros.pop(0)
@@ -147,8 +147,8 @@ def procesar_entrada(grafo):
     comando = constantes.LISTAR_OPERACIONES
     cfc = {}
     num_cfc = {}
-    #diametro = None
-    #costo = 0
+    diametro = None
+    costo = 0
     while comando:
         try: linea = input()
         except EOFError: break
@@ -160,11 +160,11 @@ def procesar_entrada(grafo):
         elif comando == constantes.CICLO: ciclo_n_articulos(grafo, parametros)
         elif comando == constantes.CONECTADOS: calcular_conectividad(grafo, parametros, cfc, num_cfc)
         elif comando == constantes.CLUSTERING: calcular_coeficiente_clustering(grafo, parametros)
-        """elif comando == constantes.DIAMETRO: 
+        elif comando == constantes.DIAMETRO: 
             if not diametro: (diametro, costo) = calcular_diametro(grafo)
             else:
                 print(diametro)
-                print(constantes.COSTO_CAMINO %costo)"""
+                print(constantes.COSTO_CAMINO %costo)
 
 def construir_grafo(archivo):
     """Recibe un archivo, con formato tsv, abierto para lectura.
