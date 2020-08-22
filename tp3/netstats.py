@@ -174,7 +174,6 @@ def construir_grafo(archivo):
         linea_limpia = linea.strip()
         titulos = linea_limpia.split('\t')
         articulo = titulos.pop(0)
-        if grafo.obtener_adyacentes(articulo): print(articulo)
         link1 = None
         if titulos: link1 = titulos.pop(0)
         if grafo.pertenece_vertice(articulo): grafo.actualizar_dato(articulo, link1)
