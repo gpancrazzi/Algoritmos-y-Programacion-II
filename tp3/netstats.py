@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 from grafo import Grafo
-from biblioteca import camino_minimo_bfs, vertices_rango_n, ciclo_largo_n
+from biblioteca import camino_minimo_bfs, vertices_rango_n, ciclo_largo_n, orden_topologico
 from biblioteca import componente_fuertemente_conexa, clustering, diametro_grafo
 import sys
 import constantes
@@ -51,18 +51,31 @@ def obtener_componente(v, cfc, num_cfc):
     conectados = cfc.get(num)
     return conectados
 
+def construir_grafo_auxiliar(grafo, parametros):
+    """Funcion auxiliar para calcular orden valido de lectura.
+    Recibe como parametro un grafo y una lista con vertices del grafo.
+    Retorna un grafo con los vertices y conexiones entre los vertices 
+    pasados por parametro."""
+    grafo_aux = Grafo(True)
+    for v in parametros:
+        grafo_aux.agregar_vertice(v)
+        for w in grafo.obtener_adyacentes(v):
+            if w in parametros:
+                grafo_aux.agregar_vertice(w)
+                grafo_aux.agregar_arista(w, v)
+    return grafo_aux
+
 ###############################################################################
 #                       COMANDOS DE NETSTATS                                  #
 ###############################################################################
 
 def listar_operaciones():
     operaciones = ["camino", "conectados", "ciclo", "rango", "navegacion", "clustering",
-    "diametro"]
+    "diametro", "lectura"]
     for operacion in operaciones:
         print(operacion)
 
 def camino_mas_corto(grafo, parametros):
-    """"""
     origen = parametros.pop(0)
     destino = parametros.pop(0)
     if ((not grafo.pertenece_vertice(origen)) or 
@@ -78,14 +91,12 @@ def camino_mas_corto(grafo, parametros):
     print(constantes.COSTO_CAMINO %orden[destino])
 
 def todos_en_rango(grafo, parametros):
-    """"""
     origen = parametros.pop(0)
     n = int(parametros.pop(0))
     en_rango = vertices_rango_n(grafo, origen, n)
     print(en_rango)
 
 def navegacion_primer_link(grafo, parametros):
-    """"""
     v = parametros.pop(0)
     camino = []
     camino.append(v)
@@ -98,7 +109,6 @@ def navegacion_primer_link(grafo, parametros):
     print(recorrido)
 
 def ciclo_n_articulos(grafo, parametros):
-    """"""
     origen = parametros.pop(0)
     n = int(parametros.pop(0))
     ciclo = ciclo_largo_n(grafo, origen, n)
@@ -138,6 +148,15 @@ def calcular_coeficiente_clustering(grafo, parametros):
     coeficiente = clustering(grafo, pagina)
     print(constantes.COEFICIENTE_CLUSTERING %coeficiente)
 
+def calcular_lectura_2_am(grafo, parametros):
+    grafo_aux = construir_grafo_auxiliar(grafo, parametros)
+    orden = orden_topologico(grafo_aux)
+    if not orden: 
+        print(constantes.SIN_LECTURA)
+        return
+    orden_lectura = constantes.COMA.join(orden)
+    print(orden_lectura)
+
 ###############################################################################
 #                       FUNCIONES PRINCIPALES                                 #
 ###############################################################################
@@ -160,6 +179,7 @@ def procesar_entrada(grafo):
         elif comando == constantes.CICLO: ciclo_n_articulos(grafo, parametros)
         elif comando == constantes.CONECTADOS: calcular_conectividad(grafo, parametros, cfc, num_cfc)
         elif comando == constantes.CLUSTERING: calcular_coeficiente_clustering(grafo, parametros)
+        elif comando == constantes.LECTURA: calcular_lectura_2_am(grafo, parametros)
         elif comando == constantes.DIAMETRO: 
             if not diametro: (diametro, costo) = calcular_diametro(grafo)
             else:
