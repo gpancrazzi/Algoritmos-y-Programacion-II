@@ -171,26 +171,36 @@ def clustering(grafo, vertice=None):
         sum_clustering += clustering(grafo, v)
     return sum_clustering / float(cant_vertices)
 
-"""def lectura(grafo, v, visitados, camino_actual):
-    visitados.add(v)
-    if len(camino_actual) == len(visitados):
-        if v in grafo.obtener_adyacentes(): return camino_actual
-        visitados.remove(v)
-        return None
-    for w in grafo.obtener_adyacentes(v):
-        if w in visitados: continue
-        solucion = dfs_ciclo_largo_n(grafo, w, origen, n, visitados, camino_actual + [w])
-        if solucion: return solucion
-    visitados.remove(v)
+def obtener_grados_de_entrada(grafo):
+    """Permite obtener el grado de entrada de cada vertice en el grafo.
+    Retorna un diccionario con los vertices como clave y como valor el grado de entrada."""
+    grados = {}
+    for v in grafo.obtener_todos_los_vertices():
+        grados[v] = 0
+    for v in grafo.obtener_todos_los_vertices():
+        for w in grafo.obtener_adyacentes(v):
+            grados[w] += 1
+    return grados
+
+def orden_topologico(grafo):
+    """Permite obtener un orden topologico posible.
+    Retorna una lista con el orden.
+    En caso que haya un ciclo, retorna None."""
+    grados = obtener_grados_de_entrada(grafo)
+    cola = queue.Queue()
+    for v in grafo.obtener_todos_los_vertices():
+        if grados[v] == 0: cola.put(v)
+    resultado = []
+    while not cola.empty():
+        v = cola.get()
+        resultado.append(v)
+        for w in grafo.obtener_adyacentes(v):
+            grados[w] -= 1
+            if grados[w] == 0: cola.put(w)
+    if len(resultado) == grafo.cantidad_vertices():
+        return resultado
     return None
-
-def lectura_2_am(grafo, camino):
-    """"""
-    visitados = set()
-    orden = []
-    dfs_ciclo_largo_n(grafo, camino[0], visitados, orden)
-    return camino"""
-
+    
 def diametro_grafo(grafo):
     """Permite calcular el camino mínimo más grande del grafo para grafos no pesados.
     Retorna el vertice de origen, de fin y el numero total de vertices en el diametro."""
