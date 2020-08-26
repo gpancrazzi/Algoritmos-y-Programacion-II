@@ -54,8 +54,8 @@ def obtener_componente(v, cfc, num_cfc):
 def construir_grafo_auxiliar(grafo, parametros):
     """Funcion auxiliar para calcular orden valido de lectura.
     Recibe como parametro un grafo y una lista con vertices del grafo.
-    Retorna un grafo con los vertices y conexiones entre los vertices 
-    pasados por parametro."""
+    Retorna un grafo con los vertices y conexiones entre los vertices pasados por parametro
+    (invertidas según aparecen en el grafo original)."""
     grafo_aux = Grafo(True)
     for v in parametros:
         grafo_aux.agregar_vertice(v)
