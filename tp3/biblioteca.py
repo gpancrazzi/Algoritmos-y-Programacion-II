@@ -1,6 +1,7 @@
 import queue
 from grafo import Grafo
 from pila import Pila
+import random
 
 ###############################################################################
 #                       FUNCIONES AUXILIARES                                  #
@@ -95,6 +96,41 @@ def calcular_arista_de_arista(grafo, vertice):
             if w == vertice: continue
             if grafo.vertices_estan_unidos(vertice, w): cant_aristas += 1
     return cant_aristas, bucle
+
+def calcular_orden_aleatorio(vertices):
+    """Funcion para obtener un orden aleatorio.
+    Recibe una lista y retorna una lista con el orden."""
+    orden = []
+    aux = vertices
+    while len(aux) != 0:
+        pos = random.randint(0, len(aux) - 1)
+        v = aux[pos]
+        orden.append(v)
+        aux.remove(v)
+    print(orden)
+    return orden
+
+def max_freq(label, vertices):
+    """Funcion auxiliar para calcular comunidades.
+    Recibe un diccionario con las labels y una lista con los vertices
+    de entrada de un vertice particular.
+    Retorna el vertice de mayor frecuencia entre los vertices de entrada."""
+    frecuencias = {}
+    for v in vertices:
+        num_label = label.get(v)
+        if not num_label in frecuencias:
+            frecuencias[num_label] = 0
+        else:
+            freq = frecuencias.get(num_label)
+            freq += 1
+            frecuencias[num_label] = freq
+    maximo = 0
+    label_max = 0
+    for v in frecuencias:
+        if frecuencias.get(v) >= maximo:
+            label_max = label.get(v)
+            maximo = frecuencias.get(v)
+    return label_max
 
 ###############################################################################
 #                       FUNCIONES A USAR POR TDA GRAFO                        #
@@ -220,3 +256,38 @@ def diametro_grafo(grafo):
                 origen_max = v
                 destino_max = w
     return origen_max, destino_max, orden_max
+
+def vertices_entrada(grafo):
+    """Calcula los vertices de entrada de cada vertice en el grafo.
+    Retorna un diccionario con los vertices de entrada de cada vertice."""
+    entradas = {}
+    for v in grafo.obtener_todos_los_vertices():
+        for w in grafo.obtener_adyacentes(v):
+            if not w in entradas:
+                vertices = []
+                vertices.append(v)
+                entradas[w] = vertices
+            else:
+                vertices = entradas.get(w)
+                vertices.append(v)
+    return entradas
+
+def label_propagation(grafo):
+    """Retorna un diccionario con los vertices como clave y como dato 
+    el numero de comunidad al que pertenecen."""
+    entradas = vertices_entrada(grafo)
+    label = {}
+    num = 0
+    for v in grafo.obtener_todos_los_vertices():
+        label[v] = num
+        num += 1
+    iteraciones = 2
+    for i in range(iteraciones):
+        orden_aleatorio = calcular_orden_aleatorio(list(grafo.obtener_todos_los_vertices()))
+        for v in orden_aleatorio:
+            label[v] = max_freq(label, entradas[v])
+    return label
+
+def page_rank(grafo):
+    """"""
+    

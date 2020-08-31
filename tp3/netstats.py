@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from grafo import Grafo
 from biblioteca import camino_minimo_bfs, vertices_rango_n, ciclo_largo_n, orden_topologico
-from biblioteca import componente_fuertemente_conexa, clustering, diametro_grafo
+from biblioteca import componente_fuertemente_conexa, clustering, diametro_grafo, label_propagation
 import sys
 import constantes
 sys.setrecursionlimit(999999999)
@@ -71,7 +71,7 @@ def construir_grafo_auxiliar(grafo, parametros):
 
 def listar_operaciones():
     operaciones = ["camino", "conectados", "ciclo", "rango", "navegacion", "clustering",
-    "diametro", "lectura"]
+    "diametro", "lectura", "comunidad", "mas_importantes"]
     for operacion in operaciones:
         print(operacion)
 
@@ -157,6 +157,27 @@ def calcular_lectura_2_am(grafo, parametros):
     orden_lectura = constantes.COMA.join(orden)
     print(orden_lectura)
 
+def calcular_comunidad(grafo, parametros, comunidades, num_comunidad):
+    pagina = parametros.pop(0)
+    if not pagina in comunidades:
+        grupos = label_propagation(grafo)
+        comunidades.update(grupos)
+        for v in comunidades:
+            label = comunidades.get(v)
+            if not label in num_comunidad:
+                comunidad = []
+                comunidad.append(v)
+                num_comunidad[label] = comunidad
+            else:
+                grupo = num_comunidad.get(label)
+                grupo.append(v)
+    num = comunidades.get(pagina)
+    conjunto = constantes.COMA.join(num_comunidad.get(num))
+    print(conjunto)
+
+def calcular_mas_importantes(grafo, parametros):
+
+
 ###############################################################################
 #                       FUNCIONES PRINCIPALES                                 #
 ###############################################################################
@@ -168,6 +189,8 @@ def procesar_entrada(grafo):
     num_cfc = {}
     diametro = None
     costo = 0
+    comunidades = {}
+    num_comunidad = {}
     while comando:
         try: linea = input()
         except EOFError: break
@@ -180,6 +203,8 @@ def procesar_entrada(grafo):
         elif comando == constantes.CONECTADOS: calcular_conectividad(grafo, parametros, cfc, num_cfc)
         elif comando == constantes.CLUSTERING: calcular_coeficiente_clustering(grafo, parametros)
         elif comando == constantes.LECTURA: calcular_lectura_2_am(grafo, parametros)
+        elif comando == constantes.COMUNIDAD: calcular_comunidad(grafo, parametros, comunidades, num_comunidad)
+        elif comando == constantes.MAS_IMPORTANTES: calcular_mas_importantes(grafo, parametros)
         elif comando == constantes.DIAMETRO: 
             if not diametro: (diametro, costo) = calcular_diametro(grafo)
             else:
