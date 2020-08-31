@@ -114,7 +114,7 @@ def max_freq(label, vertices):
     """Funcion auxiliar para calcular comunidades.
     Recibe un diccionario con las labels y una lista con los vertices
     de entrada de un vertice particular.
-    Retorna el vertice de mayor frecuencia entre los vertices de entrada."""
+    Retorna el label de mayor frecuencia entre los vertices de entrada."""
     frecuencias = {}
     for v in vertices:
         num_label = label.get(v)
@@ -290,4 +290,3 @@ def label_propagation(grafo):
 
 def page_rank(grafo):
     """"""
-    
