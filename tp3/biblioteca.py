@@ -107,23 +107,20 @@ def calcular_orden_aleatorio(vertices):
         v = aux[pos]
         orden.append(v)
         aux.remove(v)
-    print(orden)
     return orden
 
 def max_freq(label, vertices):
     """Funcion auxiliar para calcular comunidades.
-    Recibe un diccionario con las labels y una lista con los vertices
-    de entrada de un vertice particular.
+    Recibe un diccionario con las labels y una lista con los adyacentes de un vertice particular.
     Retorna el label de mayor frecuencia entre los vertices de entrada."""
     frecuencias = {}
     for v in vertices:
-        num_label = label.get(v)
-        if not num_label in frecuencias:
-            frecuencias[num_label] = 0
+        if not v in frecuencias:
+            frecuencias[v] = 0
         else:
-            freq = frecuencias.get(num_label)
-            freq += 1
-            frecuencias[num_label] = freq
+            freq = frecuencias.get(v)
+            freq = freq + 1
+            frecuencias[v] = freq
     maximo = 0
     label_max = 0
     for v in frecuencias:
@@ -275,7 +272,6 @@ def vertices_entrada(grafo):
 def label_propagation(grafo):
     """Retorna un diccionario con los vertices como clave y como dato 
     el numero de comunidad al que pertenecen."""
-    entradas = vertices_entrada(grafo)
     label = {}
     num = 0
     for v in grafo.obtener_todos_los_vertices():
@@ -285,7 +281,7 @@ def label_propagation(grafo):
     for i in range(iteraciones):
         orden_aleatorio = calcular_orden_aleatorio(list(grafo.obtener_todos_los_vertices()))
         for v in orden_aleatorio:
-            label[v] = max_freq(label, entradas[v])
+            label[v] = max_freq(label, grafo.obtener_adyacentes(v))
     return label
 
 def page_rank(grafo):
