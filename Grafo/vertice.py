@@ -3,7 +3,7 @@ class Vertice(object):
     nombre, dato y vertices vecinos."""
     def __init__(self, nombre, dato=None):
         """Crea un vertice
-        nombre y peso son cadenas, peso es optativo"""
+        nombre y dato son cadenas, dato es optativo"""
         self.nombre = nombre
         self.dato = dato
         self.vecinos = {}
