@@ -129,6 +129,16 @@ def max_freq(label, vertices):
             maximo = frecuencias.get(v)
     return label_max
 
+def calcular_ranking(ranking, v, entradas, grado_salida, d, constante):
+    """Función auxiliar para calcular el pagerank.
+    Retorna el rank del vertice pasado por parametro."""
+    puntaje = float(0)
+    suma_ranking = float(0)
+    for w in entradas.get(v):
+        suma_ranking = suma_ranking + ranking.get(w) / float(grado_salida.get(w))
+    puntaje = constante + d * suma_ranking
+    return puntaje
+
 ###############################################################################
 #                       FUNCIONES A USAR POR TDA GRAFO                        #
 ###############################################################################
@@ -215,6 +225,16 @@ def obtener_grados_de_entrada(grafo):
             grados[w] += 1
     return grados
 
+def obtener_grados_de_salida(grafo):
+    """Permite obtener el grado de salida de cada vertice en el grafo. Ignora los bucles.
+    Retorna un diccionario con los vertices como clave y como valor el grado de salida."""
+    grados = {}
+    for v in grafo.obtener_todos_los_vertices():
+        grados[v] = len(grafo.obtener_adyacentes(v))
+        if v in grafo.obtener_adyacentes(v):
+            grados[v] = grados[v] - 1
+    return grados
+
 def orden_topologico(grafo):
     """Permite obtener un orden topologico posible.
     Retorna una lista con el orden.
@@ -255,11 +275,12 @@ def diametro_grafo(grafo):
     return origen_max, destino_max, orden_max
 
 def vertices_entrada(grafo):
-    """Calcula los vertices de entrada de cada vertice en el grafo.
+    """Calcula los vertices de entrada de cada vertice en el grafo. Ignora los bucles.
     Retorna un diccionario con los vertices de entrada de cada vertice."""
     entradas = {}
     for v in grafo.obtener_todos_los_vertices():
         for w in grafo.obtener_adyacentes(v):
+            if w == v: continue
             if not w in entradas:
                 vertices = []
                 vertices.append(v)
@@ -284,5 +305,21 @@ def label_propagation(grafo):
             label[v] = max_freq(label, grafo.obtener_adyacentes(v))
     return label
 
-def page_rank(grafo):
-    """"""
+def pagerank(grafo):
+    """Calcula el pagerank de cada vertice del grafo para grafos dirigidos no pesados.
+    Retorna un diccionario con los vertices como claves y los pageranks como valores."""
+    ranking = {}
+    for v in grafo.obtener_todos_los_vertices():
+        ranking[v] = 0
+    entradas = vertices_entrada(grafo)
+    grado_salida = obtener_grados_de_salida(grafo) 
+    d = 0.85
+    constante = (1 - d) / float(grafo.cantidad_vertices())
+    convergencia = False
+    while not convergencia:
+        convergencia = True
+        for v in grafo.obtener_todos_los_vertices():
+            rank_ant = ranking.get(v)
+            ranking[v] = calcular_ranking(ranking, v, entradas, grado_salida, d, constante)
+            if convergencia and rank_ant != ranking.get(v): convergencia = False
+    return ranking

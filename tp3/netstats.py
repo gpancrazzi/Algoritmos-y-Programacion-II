@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 from grafo import Grafo
-from biblioteca import camino_minimo_bfs, vertices_rango_n, ciclo_largo_n, orden_topologico
+from biblioteca import camino_minimo_bfs, vertices_rango_n, ciclo_largo_n, orden_topologico, pagerank
 from biblioteca import componente_fuertemente_conexa, clustering, diametro_grafo, label_propagation
 import sys
 import constantes
+import heapq
 sys.setrecursionlimit(999999999)
 
 ###############################################################################
@@ -175,8 +176,29 @@ def calcular_comunidad(grafo, parametros, comunidades, num_comunidad):
     conjunto = constantes.COMA.join(num_comunidad.get(num))
     print(conjunto)
 
-def calcular_mas_importantes(grafo, parametros):
-
+def calcular_mas_importantes(grafo, parametros, page_rank, rank_page):
+    n = int(parametros.pop(0))
+    if not page_rank:
+        articulos_importantes = pagerank(grafo)
+        page_rank.update(articulos_importantes)
+        rank_page.update(dict(zip(articulos_importantes.values(), articulos_importantes.keys())))
+    heap = []
+    for v in page_rank:
+        if not heap or len(heap) < n: 
+            heapq.heappush(heap, page_rank.get(v))
+            continue
+        minimo = heap[0]
+        if page_rank.get(v) > minimo:
+            heapq.heappop(heap)
+            heapq.heappush(heap, page_rank.get(v))
+    paginas = []
+    while heap:
+        coeficiente = heapq.heappop(heap)
+        v = rank_page.get(coeficiente)
+        paginas.append(v)
+    paginas.reverse()
+    paginas_importantes = constantes.COMA.join(paginas)
+    print(paginas_importantes)
 
 ###############################################################################
 #                       FUNCIONES PRINCIPALES                                 #
@@ -191,6 +213,8 @@ def procesar_entrada(grafo):
     costo = 0
     comunidades = {}
     num_comunidad = {}
+    rank_page = {}
+    page_rank = {}
     while comando:
         try: linea = input()
         except EOFError: break
@@ -204,7 +228,7 @@ def procesar_entrada(grafo):
         elif comando == constantes.CLUSTERING: calcular_coeficiente_clustering(grafo, parametros)
         elif comando == constantes.LECTURA: calcular_lectura_2_am(grafo, parametros)
         elif comando == constantes.COMUNIDAD: calcular_comunidad(grafo, parametros, comunidades, num_comunidad)
-        elif comando == constantes.MAS_IMPORTANTES: calcular_mas_importantes(grafo, parametros)
+        elif comando == constantes.MAS_IMPORTANTES: calcular_mas_importantes(grafo, parametros, page_rank, rank_page)
         elif comando == constantes.DIAMETRO: 
             if not diametro: (diametro, costo) = calcular_diametro(grafo)
             else:
