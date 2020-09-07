@@ -255,7 +255,12 @@ def construir_grafo(archivo):
             grafo.agregar_arista(articulo, link)
     return grafo
 
-archivo = open(sys.argv[1], 'r')
-red = construir_grafo(archivo)
-archivo.close()
-procesar_entrada(red)
+def main():
+    archivo = open(sys.argv[1], 'r')
+    red = construir_grafo(archivo)
+    archivo.close()
+    procesar_entrada(red)
+    return 0
+
+if __name__ == '__main__':
+    main()
