@@ -75,13 +75,6 @@ class Grafo(object):
         Retorna true en caso que se encuentre y false en caso contrario."""
         return nombre in self.vertices
 
-    def obtener_vertice(self, nombre):
-        """Pre: el grafo fue creado.
-        Si existe retorna el vertice y su dato, None en caso contrario."""
-        if self.pertenece_vertice(nombre):
-            return self.vertices.get(nombre)
-        return None
-
     def vertices_estan_unidos(self, inicio, fin):
         """Indica si dos vertices se encuentran conectados.
         Pre: el grafo fue creado.
@@ -96,7 +89,6 @@ class Grafo(object):
         """Pre: el grafo existe.
         Se retorna el peso en el caso que la arista exista, None en el caso contrario."""
         vertice1 = self.vertices.get(inicio)
-        vertice2 = self.vertices.get(fin)
         if self.vertices_estan_unidos(inicio, fin):
             return vertice1.ver_peso_union(fin)    
         return None
