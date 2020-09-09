@@ -2,19 +2,18 @@ import queue
 from grafo import Grafo
 
 def recorrido_bfs(grafo, origen, visitados, padres, orden, cola):
-    """"""
     visitados.add(origen)
     padres[origen] = None
     orden[origen] = 0
     cola.put(origen)
     while not cola.empty():
-        vertice = cola.get()
-        for adyacente in grafo.obtener_adyacentes(vertice):
-            if adyacente not in visitados:
-                visitados.add(adyacente)
-                padres[adyacente] = vertice
-                orden[adyacente] = orden[vertice] + 1
-                cola.put(adyacente)
+        v = cola.get()
+        for w in grafo.obtener_adyacentes(v):
+            if w not in visitados:
+                visitados.add(w)
+                padres[w] = v
+                orden[w] = orden[v] + 1
+                cola.put(w)
 
 def bfs(grafo, origen):
     """Recorrido de un grafo en ancho.
@@ -26,28 +25,30 @@ def bfs(grafo, origen):
     orden = {}
     cola = queue.Queue()
     recorrido_bfs(grafo, origen, visitados, padres, orden, cola)
-    for vertice in grafo.vertices:
-        if vertice not in visitados:
-            recorrido_bfs(grafo, vertice, visitados, padres, orden, cola)
+    for v in grafo.obtener_todos_los_vertices():
+        if v not in visitados:
+            recorrido_bfs(grafo, v, visitados, padres, orden, cola)
     return padres, orden
 
-def recorrido_dfs(grafo, vertice, visitados, padres, orden):
-    """"""
-    visitados.add(vertice)
-    for adyacente in grafo.obtener_adyacentes(vertice):
-        if adyacente not in visitados:
-            padres[adyacente] = vertice
-            orden[adyacente] = orden[vertice] + 1
-            recorrido_dfs(grafo, adyacente, visitados, padres, orden)
+def recorrido_dfs(grafo, v, visitados, padres, orden):
+    visitados.add(v)
+    for w in grafo.obtener_adyacentes(v):
+        if w not in visitados:
+            padres[w] = v
+            orden[w] = orden[v] + 1
+            recorrido_dfs(grafo, w, visitados, padres, orden)
 
 def dfs(grafo):
-    """"""
+    """Recorrido de un grafo en profundidad.
+    Se recibe el grafo y un vertice de origen.
+    Retorna un diccionario con los padres de cada vertice y
+    un diccionario con el orden de cada vertice en relación al origen indicado."""
     visitados = set()
     padres = {}
     orden = {}
-    for vertice in grafo.vertices:
-        if vertice not in visitados:
-            padres[vertice] = None
-            orden[vertice] = 0
-            recorrido_dfs(grafo, vertice, visitados, padres, orden)
+    for v in grafo.obtener_todos_los_vertices():
+        if v not in visitados:
+            padres[v] = None
+            orden[v] = 0
+            recorrido_dfs(grafo, v, visitados, padres, orden)
     return padres, orden
