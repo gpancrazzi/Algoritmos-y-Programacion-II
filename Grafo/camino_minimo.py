@@ -1,5 +1,5 @@
 from grafo import Grafo
-import queue
+import heapq
 
 #grafo pesado con pesos positivos: usar dijkstra
 #grafo pesado, dirigido, con pesos negarivos: usar bellman-ford
@@ -8,41 +8,45 @@ import queue
 #Orden de bellman-ford O(e * v) siendo e la cantidad de aristas y v la cantidad de vertices.
 
 def dijkstra(grafo, origen):
-    """"""
+    """Permite obtener todos los caminos minimos desde el origen 
+    pasado por parametro a todos los vertices del grafo.
+    Retorna un diccionario con los padres de cada vertice y otro con la distancia de cada vertice al origen."""
     distancia = {}
-    padre = {}
+    padres = {}
     INFINITO = -1
-    for vertice in grafo:
-        distancia[vertice] = INFINITO
+    for v in grafo.obtener_todos_los_vertices():
+        distancia[v] = INFINITO
     distancia[origen] = 0
-    padre[origen] = None
-    heap = queue.PriorityQueue()
-    heap.put(origen, distancia[origen])
+    padres[origen] = None
+    heap = []
+    heapq.heappush(heap, (distancia[origen], origen))
     while not heap.empty():
-        vertice = heap.get()
-        for adyacente in grafo.obtener_adyacentes(vertice):
-            if distancia[adyacente] == INFINITO or distancia[vertice] + grafo.ver_peso_arista(vertice, adyacente) < distancia[adyacente]:
-                distancia[adyacente] = distancia[vertice] + grafo.ver_peso_arista(vertice, adyacente)
-                padre[adyacente] = vertice
-                heap.put(adyacente, distancia[adyacente])
-    return padre, distancia
+        (d, v) = heapq.heappop(heap)
+        for w in grafo.obtener_adyacentes(v):
+            if distancia[w] == INFINITO or distancia[v] + grafo.ver_peso_arista(v, w) < distancia[w]:
+                distancia[w] = distancia[v] + grafo.ver_peso_arista(v, w)
+                padres[w] = v
+                heapq.heappush(heap, (distancia[w], w))
+    return padres, distancia
 
 def bellman_ford(grafo, origen):
-    """"""
+    """Permite obtener todos los caminos minimos desde el origen 
+    pasado por parametro a todos los vertices del grafo.
+    Retorna un diccionario con los padres de cada vertice y otro con la distancia de cada vertice al origen."""
     distancia = {}
-    padre = {}
+    padres = {}
     INFINITO = 'INFINITO'
-    for vertice in grafo:
-        distancia[vertice] = INFINITO
+    for v in grafo.obtener_todos_los_vertices():
+        distancia[v] = INFINITO
     distancia[origen] = 0
-    padre[origen] = None
+    padres[origen] = None
     aristas = grafo.obtener_todas_las_aristas()
     for i in range(grafo.cantidad_vertices()):
         for v, w, peso in aristas:
             if distancia[v] == INFINITO: continue
             if (distancia[v] != INFINITO and distancia[w] == INFINITO) or (distancia[w] != INFINITO and distancia[v] + peso < distancia[w]):
-                padre[w] = v
+                padres[w] = v
                 distancia[w] = distancia[v] + peso
     for v, w, peso in aristas:
         if distancia[v] + peso < distancia[w]: return None #ciclo negativo
-    return padre, distancia
+    return padres, distancia
