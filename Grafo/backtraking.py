@@ -1,7 +1,6 @@
 from grafo import Grafo
 
 def dfs_ciclo_largo_n(grafo, v, origen, n, visitados, camino_actual):
-    """"""
     visitados.add(v)
     if len(camino_actual) == n:
         if origen in grafo.obtener_adyacentes(v): return camino_actual
@@ -15,17 +14,23 @@ def dfs_ciclo_largo_n(grafo, v, origen, n, visitados, camino_actual):
     return None
 
 def ciclo_largo_n(grafo, origen, n):
-    """"""
-    return dfs_ciclo_largo_n(grafo, origen, origen, n, set(), [origen])
+    """Calcula un ciclo de largo especificado n.
+    Pre: el grafo existe.
+    Retorna una lista con los vertices que forman el ciclo."""
+    if not origen in grafo.obtener_todos_los_vertices(): return None
+    visitados = set()
+    camino = []
+    camino.append(origen)
+    return dfs_ciclo_largo_n(grafo, origen, origen, n, visitados, camino)
 
 def es_compatible(grafo, v, colores):
-    """"""
     for w in grafo.obtener_adyacentes(v):
         if w in colores and colores[w] == colores[v]: return False
     return True
 
 def coloreo(grafo, v, colores, color, k):
-    """"""
+    """Verifica si es posible colorear los vertices del grafo con la paleta pasada por parametro.
+    Retorna True si es posible y False en caso contrario."""
     colores[v] = color
     if len(colores) == grafo.cantidad_vertices():
         if es_compatible(grafo, v, colores): return True
@@ -42,7 +47,6 @@ def coloreo(grafo, v, colores, color, k):
     return False
 
 def camino_hamiltoniano_dfs(grafo, v, visitados, camino):
-    """"""
     visitados.add(v)
     camino.append(v)
     if len(visitados) == grafo.cantidad_vertices(): return True
@@ -54,7 +58,8 @@ def camino_hamiltoniano_dfs(grafo, v, visitados, camino):
     return False
 
 def camino_hamiltoniano(grafo):
-    """"""
+    """Obtiene un camino hamiltoniano.
+    Retorna una lista con el camino."""
     camino = []
     visitados = set()
     for v in grafo.obtener_todos_los_vertices():
