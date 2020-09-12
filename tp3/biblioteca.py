@@ -134,8 +134,9 @@ def calcular_ranking(ranking, v, entradas, grado_salida, d, constante):
     Retorna el rank del vertice pasado por parametro."""
     puntaje = float(0)
     suma_ranking = float(0)
-    for w in entradas.get(v):
-        suma_ranking = suma_ranking + ranking.get(w) / float(grado_salida.get(w))
+    if v in entradas:
+        for w in entradas.get(v):
+            suma_ranking = suma_ranking + ranking.get(w) / float(grado_salida.get(w))
     puntaje = constante + d * suma_ranking
     return puntaje
 
