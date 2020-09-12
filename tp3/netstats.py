@@ -198,14 +198,14 @@ def calcular_mas_importantes(grafo, parametros, page_rank, rank_page):
         importantes_invertidos = invertir_diccionario(articulos_importantes)
         rank_page.update(importantes_invertidos)
     heap = []
-    for v in page_rank:
+    for c in rank_page:
         if not heap or len(heap) < n: 
-            heapq.heappush(heap, page_rank.get(v))
+            heapq.heappush(heap, c)
             continue
         minimo = heap[0]
-        if page_rank.get(v) > minimo:
+        if c > minimo:
             heapq.heappop(heap)
-            heapq.heappush(heap, page_rank.get(v))
+            heapq.heappush(heap, c)
     paginas = []
     while heap:
         coeficiente = heapq.heappop(heap)
