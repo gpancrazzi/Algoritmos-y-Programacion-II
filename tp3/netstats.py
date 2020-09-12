@@ -66,6 +66,20 @@ def construir_grafo_auxiliar(grafo, parametros):
                 grafo_aux.agregar_arista(w, v)
     return grafo_aux
 
+def invertir_diccionario(diccionario):
+    """Recibe un diccionario.
+    Retorna un nuevo diccionario, con las claves del original como valores
+    y con los valores del original como claves."""
+    invertido = {}
+    for k in diccionario:
+        aux = []
+        value = diccionario.get(k)
+        if value in invertido:
+            aux = invertido.get(value)
+        aux.append(k)
+        invertido[value] = aux
+    return invertido
+
 ###############################################################################
 #                       COMANDOS DE NETSTATS                                  #
 ###############################################################################
@@ -181,7 +195,8 @@ def calcular_mas_importantes(grafo, parametros, page_rank, rank_page):
     if not page_rank:
         articulos_importantes = pagerank(grafo)
         page_rank.update(articulos_importantes)
-        rank_page.update(dict(zip(articulos_importantes.values(), articulos_importantes.keys())))
+        importantes_invertidos = invertir_diccionario(articulos_importantes)
+        rank_page.update(importantes_invertidos)
     heap = []
     for v in page_rank:
         if not heap or len(heap) < n: 
@@ -194,8 +209,8 @@ def calcular_mas_importantes(grafo, parametros, page_rank, rank_page):
     paginas = []
     while heap:
         coeficiente = heapq.heappop(heap)
-        v = rank_page.get(coeficiente)
-        paginas.append(v)
+        for v in rank_page.get(coeficiente):
+            paginas.append(v)
     paginas.reverse()
     paginas_importantes = constantes.COMA.join(paginas)
     print(paginas_importantes)
