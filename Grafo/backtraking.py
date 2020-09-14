@@ -59,6 +59,9 @@ def camino_hamiltoniano_dfs(grafo, v, visitados, camino):
 
 def camino_hamiltoniano(grafo):
     """Obtiene un camino hamiltoniano.
+    Un camino hamiltoniano, es un camino de un grafo, una sucesión de aristas adyacentes, 
+    que visita todos los vértices del grafo una sola vez. 
+    Si además el último vértice visitado es adyacente al primero, el camino es un ciclo hamiltoniano. 
     Retorna una lista con el camino."""
     camino = []
     visitados = set()
